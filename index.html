@@ -1,9 +1,421 @@
 <!doctype html>
-<html lang="en">
+<html lang="uk">
    <head>
       <meta charset="UTF-8" />
       <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-      <title>Document</title>
+      <title>Milfey — Вафельні торти</title>
+
+      <!-- ссылка картинка  -->
+      <head>
+         <meta charset="UTF-8" />
+         <meta
+            name="viewport"
+            content="width=device-width, initial-scale=1.0"
+         />
+         <title>Milfey — Вафельні торти</title>
+
+         <!-- СЮДА ВСТАВИТЬ -->
+         <meta property="og:title" content="Milfey — Вафельні торти" />
+         <meta
+            property="og:description"
+            content="Хрустке вафлі, ніжна начинка та лише натуральні інгредієнти."
+         />
+         <meta
+            property="og:image"
+            content="https://alexazaryan.github.io/milfey.kondyterka/images/logo.png"
+         />
+         <meta
+            property="og:url"
+            content="https://alexazaryan.github.io/milfey.kondyterka/"
+         />
+         <meta property="og:type" content="website" />
+
+         <link rel="icon" type="image/png" href="images/logo.png" />
+         <link
+            href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;900&family=Pacifico&display=swap"
+            rel="stylesheet"
+         />
+         <link rel="stylesheet" href="style.css" />
+      </head>
+
+      <!-- FAVICON -->
+      <link rel="icon" type="image/png" href="images/logo.png" />
+      <link
+         href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;900&family=Pacifico&display=swap"
+         rel="stylesheet"
+      />
+      <link rel="stylesheet" href="style.css" />
    </head>
-   <body></body>
+   <body>
+      <nav class="nav">
+         <a href="#" class="nav-logo"
+            ><img
+               src="images/logo.png"
+               alt="Milfey"
+               style="height: 46px; width: 46px; object-fit: contain"
+         /></a>
+         <ul class="nav-links">
+            <li><a href="#catalog">Каталог</a></li>
+            <li>
+               <a
+                  href="#"
+                  onclick="
+                     toggleAbout();
+                     return false;
+                  "
+                  >Про нас</a
+               >
+            </li>
+            <li><a href="#contact">Контакти</a></li>
+         </ul>
+         <button class="nav-cart" onclick="toggleCart()">
+            🛒 Кошик<span class="cart-count" id="cartCountDesktop">0</span>
+         </button>
+         <div class="nav-mobile-right">
+            <button
+               class="nav-cart-mobile"
+               onclick="toggleCart()"
+               aria-label="Кошик"
+            >
+               🛒<span class="cart-count" id="cartCountMobile">0</span>
+            </button>
+            <button
+               class="nav-burger"
+               id="burgerBtn"
+               onclick="toggleMenu()"
+               aria-label="Меню"
+            >
+               <span class="bar bar1"></span><span class="bar bar2"></span
+               ><span class="bar bar3"></span>
+            </button>
+         </div>
+      </nav>
+
+      <div class="mobile-menu" id="mobileMenu">
+         <a href="#catalog" onclick="toggleMenu()">Каталог</a>
+         <a
+            href="#"
+            onclick="
+               toggleMenu();
+               toggleAbout();
+            "
+            >Про нас</a
+         >
+         <a href="#contact" onclick="toggleMenu()">Контакти</a>
+      </div>
+
+      <section class="hero">
+         <div class="hero-inner">
+            <h1>Смак свята<br />кожного дня</h1>
+            <p>
+               Хрустке вафлі, ніжна начинка<br />та лише натуральні інгредієнти
+            </p>
+            <!-- <img
+               src="images/logo.png"
+               alt="Milfey"
+               style="
+                  width: 130px;
+                  height: 130px;
+                  object-fit: contain;
+                  margin-top: 8px;
+                  filter: drop-shadow(0 4px 16px rgba(0, 0, 0, 0.2));
+               "
+            /> -->
+         </div>
+      </section>
+
+      <section class="section" id="catalog">
+         <div class="section-label">Наш асортимент</div>
+         <h2 class="section-title">Всі смаки Milfey</h2>
+         <div class="products" id="productGrid"></div>
+      </section>
+
+      <div class="why-strip">
+         <h2 class="why-title-main">Чому обирають нас?</h2>
+         <div class="why-grid">
+            <div class="why-item">
+               <div class="why-icon">🥥</div>
+               <div class="why-name">Натуральний склад</div>
+               <div class="why-desc">
+                  Без пальмової олії та штучних барвників
+               </div>
+            </div>
+            <div class="why-item">
+               <div class="why-icon">🚚</div>
+               <div class="why-name">Швидка доставка</div>
+               <div class="why-desc">Доставляємо свіжими протягом 1–2 днів</div>
+            </div>
+            <div class="why-item">
+               <div class="why-icon">🎁</div>
+               <div class="why-name">Ідеальний подарунок</div>
+               <div class="why-desc">
+                  Красива упаковка, яку приємно дарувати
+               </div>
+            </div>
+            <div class="why-item">
+               <div class="why-icon">⭐</div>
+               <div class="why-name">Улюблені тисячами</div>
+               <div class="why-desc">
+                  Тисячі задоволених покупців по всій країні
+               </div>
+            </div>
+         </div>
+      </div>
+
+      <footer class="footer" id="contact">
+         <div class="footer-logo">Milfey</div>
+         <p>© 2026 Milfey — Вафельні торти</p>
+         <p>
+            <a href="tel:+380000000000">📞 +38 (000) 000-00-00</a> &nbsp;|&nbsp;
+            <a href="mailto:hello@milfey.ua">✉️ hello@milfey.ua</a>
+         </p>
+         <p class="footer-dev">
+            Розроблено
+            <a href="https://azacode.pro" target="_blank">azacode.pro</a>
+         </p>
+      </footer>
+
+      <!-- ABOUT MODAL -->
+      <div
+         class="modal-overlay"
+         id="aboutOverlay"
+         onclick="closeOnBg(event, 'aboutOverlay', toggleAbout)"
+      >
+         <div class="modal">
+            <div class="modal-head">
+               <button class="modal-close" onclick="toggleAbout()">✕</button>
+               <div class="modal-emoji">🧇</div>
+               <h2>Про нас</h2>
+               <p>Milfey — це любов до вафель і доброго смаку</p>
+            </div>
+            <div class="modal-body">
+               <p>
+                  Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed
+                  do eiusmod tempor incididunt ut labore et dolore magna aliqua.
+                  Ut enim ad minim veniam, quis nostrud exercitation ullamco
+                  laboris.
+               </p>
+               <p>
+                  Duis aute irure dolor in reprehenderit in voluptate velit esse
+                  cillum dolore eu fugiat nulla pariatur. Excepteur sint
+                  occaecat cupidatat non proident deserunt mollit anim id est
+                  laborum.
+               </p>
+               <p>
+                  Sed ut perspiciatis unde omnis iste natus error sit voluptatem
+                  accusantium doloremque laudantium totam rem aperiam eaque ipsa
+                  quae ab illo inventore veritatis.
+               </p>
+            </div>
+         </div>
+      </div>
+
+      <!-- CART DRAWER -->
+      <div
+         class="drawer-overlay"
+         id="drawerOverlay"
+         onclick="toggleCart()"
+      ></div>
+      <div class="drawer" id="drawer">
+         <div class="drawer-screens-wrap">
+            <!-- SCREEN 1: CART -->
+            <div class="drawer-screen active" id="screenCart">
+               <div class="drawer-head">
+                  <h2>Ваш кошик</h2>
+                  <button class="modal-close" onclick="toggleCart()">✕</button>
+               </div>
+               <div class="drawer-body" id="drawerBody"></div>
+               <div class="drawer-foot" id="drawerFoot" style="display: none">
+                  <div class="total-row">
+                     <span>Разом:</span><span id="totalPrice">0 грн</span>
+                  </div>
+                  <button
+                     class="btn-teal btn-full"
+                     onclick="showScreen('screenOrder', 'right')"
+                  >
+                     Оформити замовлення →
+                  </button>
+               </div>
+            </div>
+
+            <!-- SCREEN 2: ORDER FORM -->
+            <div class="drawer-screen right" id="screenOrder">
+               <div class="drawer-head">
+                  <button
+                     class="drawer-back"
+                     onclick="showScreen('screenCart', 'left')"
+                  >
+                     &#8592;
+                  </button>
+                  <h2>Оформлення</h2>
+                  <button class="modal-close" onclick="toggleCart()">✕</button>
+               </div>
+               <div class="drawer-body">
+                  <div class="order-summary" id="orderSummary"></div>
+                  <div class="form-row">
+                     <div class="form-group">
+                        <label class="form-label">Ім'я <span>*</span></label>
+                        <input
+                           class="form-input"
+                           id="fName"
+                           type="text"
+                           placeholder="Олена"
+                           maxlength="50"
+                           autocomplete="given-name"
+                        />
+                     </div>
+                     <div class="form-group">
+                        <label class="form-label"
+                           >Прізвище <span>*</span></label
+                        >
+                        <input
+                           class="form-input"
+                           id="fLastName"
+                           type="text"
+                           placeholder="Іванова"
+                           maxlength="50"
+                           autocomplete="family-name"
+                        />
+                     </div>
+                  </div>
+                  <div class="form-group">
+                     <label class="form-label">Телефон <span>*</span></label>
+                     <input
+                        class="form-input"
+                        id="fPhone"
+                        type="tel"
+                        inputmode="numeric"
+                        placeholder="+38 (___) ___-__-__"
+                        maxlength="17"
+                        autocomplete="tel"
+                     />
+                  </div>
+                  <div class="form-group">
+                     <label class="form-label">Email</label>
+                     <input
+                        class="form-input"
+                        id="fEmail"
+                        type="email"
+                        inputmode="email"
+                        placeholder="email@example.com"
+                        maxlength="50"
+                        autocomplete="email"
+                     />
+                     <div class="form-note">Необов'язково</div>
+                  </div>
+                  <div class="form-row">
+                     <div class="form-group">
+                        <label class="form-label">Місто <span>*</span></label>
+                        <input
+                           class="form-input"
+                           id="fCity"
+                           type="text"
+                           placeholder="Київ"
+                           maxlength="50"
+                        />
+                     </div>
+                     <div class="form-group">
+                        <label class="form-label"
+                           >Відділення НП <span>*</span></label
+                        >
+                        <input
+                           class="form-input"
+                           id="fNova"
+                           type="text"
+                           inputmode="numeric"
+                           placeholder="№ 12"
+                           maxlength="10"
+                        />
+                     </div>
+                  </div>
+                  <div class="form-group">
+                     <label class="form-label">Коментар</label>
+                     <input
+                        class="form-input"
+                        id="fComment"
+                        type="text"
+                        placeholder="Побажання до замовлення..."
+                        maxlength="200"
+                     />
+                     <div class="form-note">Необов'язково</div>
+                  </div>
+               </div>
+               <div class="drawer-foot">
+                  <button class="btn-teal btn-full" onclick="submitOrder()">
+                     Відправити замовлення →
+                  </button>
+               </div>
+            </div>
+
+            <!-- SCREEN 3: SUCCESS -->
+            <div class="drawer-screen right" id="screenSuccess">
+               <div class="drawer-head">
+                  <h2>Замовлення</h2>
+                  <button class="modal-close" onclick="toggleCart()">✕</button>
+               </div>
+               <div
+                  class="drawer-body"
+                  style="
+                     display: flex;
+                     flex-direction: column;
+                     align-items: center;
+                     justify-content: center;
+                     text-align: center;
+                     padding: 40px 28px;
+                  "
+               >
+                  <div style="font-size: 64px; margin-bottom: 20px">🎉</div>
+                  <div
+                     style="
+                        font-family: &quot;Pacifico&quot;, cursive;
+                        font-size: 24px;
+                        color: var(--teal-dark);
+                        margin-bottom: 14px;
+                     "
+                  >
+                     Дякуємо!
+                  </div>
+                  <p
+                     style="
+                        font-size: 16px;
+                        font-weight: 900;
+                        color: #1a3335;
+                        margin-bottom: 12px;
+                     "
+                  >
+                     Ваше замовлення прийнято!
+                  </p>
+                  <p
+                     style="
+                        font-size: 14px;
+                        font-weight: 600;
+                        color: #4a6a6c;
+                        line-height: 1.7;
+                        margin-bottom: 12px;
+                     "
+                  >
+                     Наш менеджер зателефонує для підтвердження замовлення та
+                     уточнення деталей доставки.
+                  </p>
+                  <p style="font-size: 14px; font-weight: 600; color: #4a6a6c">
+                     Є питання?
+                     <a
+                        href="tel:+380000000000"
+                        style="color: var(--teal-dark); font-weight: 900"
+                        >+38 (000) 000-00-00</a
+                     >
+                  </p>
+               </div>
+               <div class="drawer-foot">
+                  <button class="btn-teal btn-full" onclick="toggleCart()">
+                     Чудово, дякую! 👍
+                  </button>
+               </div>
+            </div>
+         </div>
+         <!-- /drawer-screens-wrap -->
+      </div>
+
+      <script src="script.js"></script>
+   </body>
 </html>
