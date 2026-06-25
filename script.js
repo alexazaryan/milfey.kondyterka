@@ -19,9 +19,6 @@ const firebaseConfig = {
 const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
 
-const TG_TOKEN = "8914645879:AAFMR2fSWzvNZrUpvA80aXC8EJGkN3pW1Mo";
-const TG_CHAT_ID = "333932386";
-
 /* ======================
    CART STATE
    ====================== */
@@ -192,6 +189,10 @@ window.toggleCart = function () {
    document.getElementById("drawerOverlay").classList.toggle("open");
    document.body.style.overflow = isOpen ? "" : "hidden";
    if (!isOpen) showScreen("screenCart", "left");
+
+   // Скрываем/показываем кнопку звонка
+   const callBtn = document.getElementById("callBtn");
+   if (callBtn) callBtn.style.display = isOpen ? "" : "none";
 };
 
 window.showScreen = function (toId, dir) {
@@ -308,11 +309,13 @@ window.submitOrder = async function () {
    ====================== */
 window.toggleAbout = function () {
    document.getElementById("aboutOverlay").classList.toggle("open");
-   document.body.style.overflow = document
+   const isOpen = document
       .getElementById("aboutOverlay")
-      .classList.contains("open")
-      ? "hidden"
-      : "";
+      .classList.contains("open");
+   document.body.style.overflow = isOpen ? "hidden" : "";
+
+   const callBtn = document.getElementById("callBtn");
+   if (callBtn) callBtn.style.display = isOpen ? "none" : "";
 };
 
 window.closeOnBg = function (e, id, fn) {
