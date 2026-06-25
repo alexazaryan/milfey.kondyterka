@@ -1,16 +1,32 @@
-import { auth, db } from "./firebase.js";
+import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.0/firebase-app.js";
 import {
+   getAuth,
    signInWithEmailAndPassword,
    signOut,
 } from "https://www.gstatic.com/firebasejs/11.6.0/firebase-auth.js";
 import {
+   getFirestore,
    collection,
    addDoc,
    getDocs,
    deleteDoc,
    doc,
-   updateDoc,
+   query,
+   orderBy,
 } from "https://www.gstatic.com/firebasejs/11.6.0/firebase-firestore.js";
+
+const firebaseConfig = {
+   apiKey: "AIzaSyBMScsarZua1lDu29-oc4P74-Km3GItMsg",
+   authDomain: "milfey-kondyterka.firebaseapp.com",
+   projectId: "milfey-kondyterka",
+   storageBucket: "milfey-kondyterka.firebasestorage.app",
+   messagingSenderId: "68782081603",
+   appId: "1:68782081603:web:c8ebf7a592707fe3cd76f6",
+};
+
+const app = initializeApp(firebaseConfig);
+const auth = getAuth(app);
+const db = getFirestore(app);
 
 const IMGBB_API_KEY = "b7636e548e191116b0f327bdc1e07423";
 
@@ -52,10 +68,7 @@ async function uploadPhoto(file) {
    formData.append("image", base64.split(",")[1]);
    const res = await fetch(
       `https://api.imgbb.com/1/upload?key=${IMGBB_API_KEY}`,
-      {
-         method: "POST",
-         body: formData,
-      },
+      { method: "POST", body: formData },
    );
    const data = await res.json();
    return data.data.url;
@@ -120,7 +133,8 @@ window.addProduct = async function () {
 async function loadProducts() {
    const list = document.getElementById("products-list");
    list.innerHTML = '<p class="loading">Завантаження...</p>';
-   const snapshot = await getDocs(collection(db, "products"));
+   const q = query(collection(db, "products"), orderBy("createdAt", "desc"));
+   const snapshot = await getDocs(q);
    if (snapshot.empty) {
       list.innerHTML =
          '<p class="no-products">Товарів ще немає. Додайте перший!</p>';
