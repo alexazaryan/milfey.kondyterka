@@ -294,6 +294,7 @@ body {
    padding: 70px 40px;
    max-width: 1200px;
    margin: 0 auto;
+   scroll-margin-top: 210px;
 }
 .section-label {
    font-size: 12px;
@@ -350,6 +351,8 @@ body {
       opacity 0.9s ease,
       transform 0.9s ease,
       box-shadow 0.2s;
+   display: flex;
+   flex-direction: column;
 }
 .card.visible {
    opacity: 1;
@@ -375,6 +378,9 @@ body {
 }
 .card-body {
    padding: 18px 20px 22px;
+   display: flex;
+   flex-direction: column;
+   flex: 1;
 }
 .card-name {
    font-weight: 900;
@@ -388,6 +394,7 @@ body {
    font-weight: 700;
    margin-bottom: 16px;
    line-height: 1.5;
+   flex: 1;
 }
 .card-footer {
    display: flex;
@@ -735,9 +742,22 @@ body {
    color: white;
    padding: 20px 24px;
    display: flex;
-   justify-content: space-between;
+   justify-content: center;
    align-items: center;
    flex-shrink: 0;
+   position: relative;
+}
+.drawer-head .modal-close {
+   position: absolute;
+   right: 24px;
+   top: 50%;
+   transform: translateY(-50%);
+}
+.drawer-head .drawer-back {
+   position: absolute;
+   left: 24px;
+   top: 50%;
+   transform: translateY(-50%);
 }
 .drawer-head h2 {
    font-family: "Pacifico", cursive;

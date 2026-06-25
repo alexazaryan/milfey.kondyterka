@@ -19,6 +19,9 @@ const firebaseConfig = {
 const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
 
+const TG_TOKEN = "8914645879:AAFMR2fSWzvNZrUpvA80aXC8EJGkN3pW1Mo";
+const TG_CHAT_ID = "333932386";
+
 /* ======================
    CART STATE
    ====================== */
@@ -219,9 +222,24 @@ function fillOrderSummary() {
 }
 
 /* ======================
+   TELEGRAM
+   ====================== */
+async function sendToTelegram(text) {
+   await fetch(`https://api.telegram.org/bot${TG_TOKEN}/sendMessage`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+         chat_id: TG_CHAT_ID,
+         text: text,
+         parse_mode: "HTML",
+      }),
+   });
+}
+
+/* ======================
    ORDER FORM
    ====================== */
-window.submitOrder = function () {
+window.submitOrder = async function () {
    const fields = [
       { id: "fName" },
       { id: "fLastName" },
@@ -246,6 +264,35 @@ window.submitOrder = function () {
    });
 
    if (hasError) return;
+
+   const name = document.getElementById("fName").value.trim();
+   const lastName = document.getElementById("fLastName").value.trim();
+   const phone = document.getElementById("fPhone").value.trim();
+   const email = document.getElementById("fEmail").value.trim();
+   const city = document.getElementById("fCity").value.trim();
+   const nova = document.getElementById("fNova").value.trim();
+   const comment = document.getElementById("fComment").value.trim();
+
+   let orderText = `🛒 <b>Нове замовлення!</b>\n\n`;
+   orderText += `👤 <b>Клієнт:</b> ${name} ${lastName}\n`;
+   orderText += `📞 <b>Телефон:</b> ${phone}\n`;
+   if (email) orderText += `✉️ <b>Email:</b> ${email}\n`;
+   orderText += `📍 <b>Місто:</b> ${city}\n`;
+   orderText += `📦 <b>Відділення НП:</b> ${nova}\n`;
+   if (comment) orderText += `💬 <b>Коментар:</b> ${comment}\n`;
+   orderText += `\n🧇 <b>Товари:</b>\n`;
+
+   let sum = 0;
+   Object.keys(cart).forEach((id) => {
+      const p = products.find((x) => x.id === id);
+      if (!p) return;
+      const qty = cart[id];
+      sum += p.price * qty;
+      orderText += `• ${p.name} × ${qty} = ${p.price * qty} грн\n`;
+   });
+   orderText += `\n💰 <b>Разом: ${sum} грн</b>`;
+
+   await sendToTelegram(orderText);
 
    cart = {};
    updateCartUI();
