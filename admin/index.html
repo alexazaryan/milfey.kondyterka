@@ -1,0 +1,95 @@
+<!doctype html>
+<html lang="uk">
+   <head>
+      <meta charset="UTF-8" />
+      <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+      <title>Milfey — Адмінка</title>
+      <link
+         href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;900&family=Pacifico&display=swap"
+         rel="stylesheet"
+      />
+      <link rel="stylesheet" href="/admin/admin.css" />
+   </head>
+   <body>
+      <!-- ЛОГІН -->
+      <div id="login-screen">
+         <div class="login-box">
+            <div class="login-logo">Milfey</div>
+            <h2>Вхід в адмінку</h2>
+            <input type="email" id="email" placeholder="Email" />
+            <div class="password-wrap">
+               <input type="password" id="password" placeholder="Пароль" />
+               <span onclick="togglePassword()" class="eye-btn">👁</span>
+            </div>
+            <button onclick="login()">Увійти</button>
+            <p id="login-error"></p>
+         </div>
+      </div>
+
+      <!-- АДМІНКА -->
+      <div id="admin-screen" style="display: none">
+         <div class="admin-nav">
+            <span class="admin-nav-logo">Milfey — Адмінка</span>
+            <button class="logout-btn" onclick="logout()">Вийти</button>
+         </div>
+
+         <div class="admin-wrap">
+            <!-- ФОРМА ДОДАВАННЯ -->
+            <div class="admin-form">
+               <h3>Додати товар</h3>
+
+               <div class="field-wrap">
+                  <input
+                     type="text"
+                     id="p-name"
+                     placeholder="Назва товару"
+                     maxlength="25"
+                  />
+                  <small id="name-count">0/25</small>
+               </div>
+
+               <div class="field-wrap">
+                  <textarea
+                     id="p-desc"
+                     placeholder="Опис товару"
+                     maxlength="100"
+                  ></textarea>
+                  <small id="desc-count">0/100</small>
+               </div>
+
+               <input
+                  type="number"
+                  id="p-price"
+                  placeholder="Ціна (грн)"
+                  min="0"
+               />
+
+               <label class="file-label">
+                  <span>📷 Обрати фото</span>
+                  <input type="file" id="p-photo" accept="image/*" />
+               </label>
+               <img
+                  id="photo-preview"
+                  style="
+                     display: none;
+                     max-width: 160px;
+                     border-radius: 12px;
+                     margin-top: 8px;
+                  "
+               />
+
+               <button onclick="addProduct()">Додати товар</button>
+               <p id="form-status" class="form-status"></p>
+            </div>
+
+            <!-- СПИСОК ТОВАРІВ -->
+            <div class="admin-list-section">
+               <h3>Список товарів</h3>
+               <div id="products-list"></div>
+            </div>
+         </div>
+      </div>
+
+      <script type="module" src="/admin/admin.js"></script>
+   </body>
+</html>

@@ -4,42 +4,6 @@
       <meta charset="UTF-8" />
       <meta name="viewport" content="width=device-width, initial-scale=1.0" />
       <title>Milfey — Вафельні торти</title>
-
-      <!-- ссылка картинка  -->
-      <head>
-         <meta charset="UTF-8" />
-         <meta
-            name="viewport"
-            content="width=device-width, initial-scale=1.0"
-         />
-         <title>Milfey — Вафельні торти</title>
-
-         <!-- СЮДА ВСТАВИТЬ -->
-         <meta property="og:title" content="Milfey — Вафельні торти" />
-         <meta
-            property="og:description"
-            content="Хрустке вафлі, ніжна начинка та лише натуральні інгредієнти."
-         />
-         <meta
-            property="og:image"
-            content="https://alexazaryan.github.io/milfey.kondyterka/images/logo.png"
-         />
-         <meta
-            property="og:url"
-            content="https://alexazaryan.github.io/milfey.kondyterka/"
-         />
-         <meta property="og:type" content="website" />
-
-         <link rel="icon" type="image/png" href="images/logo.png" />
-         <link
-            href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;900&family=Pacifico&display=swap"
-            rel="stylesheet"
-         />
-         <link rel="stylesheet" href="style.css" />
-      </head>
-
-      <!-- FAVICON -->
-      <link rel="icon" type="image/png" href="images/logo.png" />
       <link
          href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;900&family=Pacifico&display=swap"
          rel="stylesheet"
@@ -48,12 +12,7 @@
    </head>
    <body>
       <nav class="nav">
-         <a href="#" class="nav-logo"
-            ><img
-               src="images/logo.png"
-               alt="Milfey"
-               style="height: 46px; width: 46px; object-fit: contain"
-         /></a>
+         <a href="#" class="nav-logo">Milfey</a>
          <ul class="nav-links">
             <li><a href="#catalog">Каталог</a></li>
             <li>
@@ -110,24 +69,23 @@
             <p>
                Хрустке вафлі, ніжна начинка<br />та лише натуральні інгредієнти
             </p>
-            <!-- <img
-               src="images/logo.png"
-               alt="Milfey"
-               style="
-                  width: 130px;
-                  height: 130px;
-                  object-fit: contain;
-                  margin-top: 8px;
-                  filter: drop-shadow(0 4px 16px rgba(0, 0, 0, 0.2));
-               "
-            /> -->
          </div>
       </section>
 
       <section class="section" id="catalog">
          <div class="section-label">Наш асортимент</div>
          <h2 class="section-title">Всі смаки Milfey</h2>
-         <div class="products" id="productGrid"></div>
+         <div id="productGrid">
+            <div class="products-empty" id="productsEmpty">
+               <div class="products-empty-icon">🧇</div>
+               <p class="products-empty-title">
+                  Незабаром тут з'являться смаколики!
+               </p>
+               <p class="products-empty-sub">
+                  Ми вже готуємо асортимент — заходьте пізніше
+               </p>
+            </div>
+         </div>
       </section>
 
       <div class="why-strip">
@@ -192,19 +150,14 @@
                <p>
                   Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed
                   do eiusmod tempor incididunt ut labore et dolore magna aliqua.
-                  Ut enim ad minim veniam, quis nostrud exercitation ullamco
-                  laboris.
                </p>
                <p>
                   Duis aute irure dolor in reprehenderit in voluptate velit esse
-                  cillum dolore eu fugiat nulla pariatur. Excepteur sint
-                  occaecat cupidatat non proident deserunt mollit anim id est
-                  laborum.
+                  cillum dolore eu fugiat nulla pariatur.
                </p>
                <p>
                   Sed ut perspiciatis unde omnis iste natus error sit voluptatem
-                  accusantium doloremque laudantium totam rem aperiam eaque ipsa
-                  quae ab illo inventore veritatis.
+                  accusantium doloremque laudantium.
                </p>
             </div>
          </div>
@@ -218,7 +171,6 @@
       ></div>
       <div class="drawer" id="drawer">
          <div class="drawer-screens-wrap">
-            <!-- SCREEN 1: CART -->
             <div class="drawer-screen active" id="screenCart">
                <div class="drawer-head">
                   <h2>Ваш кошик</h2>
@@ -238,7 +190,6 @@
                </div>
             </div>
 
-            <!-- SCREEN 2: ORDER FORM -->
             <div class="drawer-screen right" id="screenOrder">
                <div class="drawer-head">
                   <button
@@ -285,7 +236,7 @@
                         id="fPhone"
                         type="tel"
                         inputmode="numeric"
-                        placeholder="+38 (___) ___-__-__"
+                        placeholder="+380XXXXXXXXX"
                         maxlength="17"
                         autocomplete="tel"
                      />
@@ -347,63 +298,22 @@
                </div>
             </div>
 
-            <!-- SCREEN 3: SUCCESS -->
             <div class="drawer-screen right" id="screenSuccess">
                <div class="drawer-head">
                   <h2>Замовлення</h2>
                   <button class="modal-close" onclick="toggleCart()">✕</button>
                </div>
-               <div
-                  class="drawer-body"
-                  style="
-                     display: flex;
-                     flex-direction: column;
-                     align-items: center;
-                     justify-content: center;
-                     text-align: center;
-                     padding: 40px 28px;
-                  "
-               >
+               <div class="drawer-body success-body">
                   <div style="font-size: 64px; margin-bottom: 20px">🎉</div>
-                  <div
-                     style="
-                        font-family: &quot;Pacifico&quot;, cursive;
-                        font-size: 24px;
-                        color: var(--teal-dark);
-                        margin-bottom: 14px;
-                     "
-                  >
-                     Дякуємо!
-                  </div>
-                  <p
-                     style="
-                        font-size: 16px;
-                        font-weight: 900;
-                        color: #1a3335;
-                        margin-bottom: 12px;
-                     "
-                  >
-                     Ваше замовлення прийнято!
-                  </p>
-                  <p
-                     style="
-                        font-size: 14px;
-                        font-weight: 600;
-                        color: #4a6a6c;
-                        line-height: 1.7;
-                        margin-bottom: 12px;
-                     "
-                  >
+                  <div class="success-title">Дякуємо!</div>
+                  <p class="success-text bold">Ваше замовлення прийнято!</p>
+                  <p class="success-text">
                      Наш менеджер зателефонує для підтвердження замовлення та
                      уточнення деталей доставки.
                   </p>
-                  <p style="font-size: 14px; font-weight: 600; color: #4a6a6c">
+                  <p class="success-text">
                      Є питання?
-                     <a
-                        href="tel:+380000000000"
-                        style="color: var(--teal-dark); font-weight: 900"
-                        >+38 (000) 000-00-00</a
-                     >
+                     <a href="tel:+380000000000">+38 (000) 000-00-00</a>
                   </p>
                </div>
                <div class="drawer-foot">
@@ -413,9 +323,8 @@
                </div>
             </div>
          </div>
-         <!-- /drawer-screens-wrap -->
       </div>
 
-      <script src="script.js"></script>
+      <script type="module" src="script.js"></script>
    </body>
 </html>

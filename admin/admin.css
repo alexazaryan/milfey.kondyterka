@@ -1,0 +1,314 @@
+*,
+*::before,
+*::after {
+   box-sizing: border-box;
+   margin: 0;
+   padding: 0;
+}
+
+:root {
+   --teal: #3bbec4;
+   --teal-dark: #2a9aa0;
+   --teal-light: #e6f7f8;
+   --cream: #fff8e7;
+   --white: #ffffff;
+   --text: #1a3335;
+   --pink: #ff6b9d;
+   --red: #e03b3b;
+   --green: #4caf50;
+   --radius: 14px;
+}
+
+body {
+   font-family: "Nunito", sans-serif;
+   background: #f0f7f8;
+   color: var(--text);
+   min-height: 100vh;
+}
+
+/* LOGIN */
+#login-screen {
+   display: flex;
+   justify-content: center;
+   align-items: center;
+   min-height: 100vh;
+   padding: 20px;
+}
+.login-box {
+   background: var(--white);
+   padding: 40px;
+   border-radius: 24px;
+   box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+   display: flex;
+   flex-direction: column;
+   gap: 16px;
+   width: 100%;
+   max-width: 400px;
+}
+.login-logo {
+   font-family: "Pacifico", cursive;
+   font-size: 28px;
+   color: var(--teal-dark);
+   text-align: center;
+}
+.login-box h2 {
+   text-align: center;
+   font-size: 18px;
+   color: var(--text);
+   font-weight: 700;
+}
+.password-wrap {
+   position: relative;
+}
+.eye-btn {
+   position: absolute;
+   right: 14px;
+   top: 50%;
+   transform: translateY(-50%);
+   cursor: pointer;
+   font-size: 18px;
+}
+#login-error {
+   color: var(--pink);
+   font-size: 14px;
+   text-align: center;
+   font-weight: 700;
+}
+
+/* ADMIN NAV */
+.admin-nav {
+   background: var(--teal);
+   padding: 16px 32px;
+   display: flex;
+   justify-content: space-between;
+   align-items: center;
+   position: sticky;
+   top: 0;
+   z-index: 10;
+   box-shadow: 0 3px 12px rgba(0, 0, 0, 0.15);
+}
+.admin-nav-logo {
+   font-family: "Pacifico", cursive;
+   font-size: 20px;
+   color: var(--white);
+}
+.logout-btn {
+   background: rgba(255, 255, 255, 0.2);
+   color: white;
+   border: none;
+   border-radius: 30px;
+   padding: 8px 20px;
+   font-family: "Nunito", sans-serif;
+   font-weight: 700;
+   font-size: 14px;
+   cursor: pointer;
+   transition: background 0.2s;
+}
+.logout-btn:hover {
+   background: rgba(255, 255, 255, 0.35);
+}
+
+/* WRAP */
+.admin-wrap {
+   max-width: 860px;
+   margin: 0 auto;
+   padding: 40px 20px;
+   display: flex;
+   flex-direction: column;
+   gap: 36px;
+}
+
+/* FORM */
+.admin-form {
+   background: var(--white);
+   padding: 32px;
+   border-radius: 24px;
+   box-shadow: 0 4px 20px rgba(0, 0, 0, 0.07);
+   display: flex;
+   flex-direction: column;
+   gap: 16px;
+}
+.admin-form h3 {
+   font-family: "Pacifico", cursive;
+   font-size: 22px;
+   color: var(--teal-dark);
+}
+.field-wrap {
+   display: flex;
+   flex-direction: column;
+   gap: 4px;
+}
+
+input,
+textarea {
+   width: 100%;
+   padding: 12px 16px;
+   border-radius: var(--radius);
+   border: 2px solid #d0e8ea;
+   background: #fafefe;
+   font-family: "Nunito", sans-serif;
+   font-size: 15px;
+   font-weight: 600;
+   color: var(--text);
+   transition: border-color 0.2s;
+   outline: none;
+}
+input:focus,
+textarea:focus {
+   border-color: var(--teal);
+}
+textarea {
+   height: 90px;
+   resize: vertical;
+}
+small {
+   font-size: 12px;
+   color: #7a9a9c;
+   font-weight: 600;
+   align-self: flex-end;
+}
+
+input[type="number"]::-webkit-inner-spin-button {
+   opacity: 1;
+}
+
+/* FILE */
+.file-label {
+   display: flex;
+   align-items: center;
+   gap: 10px;
+   cursor: pointer;
+}
+.file-label span {
+   background: var(--teal-light);
+   color: var(--teal-dark);
+   border-radius: var(--radius);
+   padding: 10px 20px;
+   font-weight: 900;
+   font-size: 14px;
+   transition: background 0.2s;
+}
+.file-label span:hover {
+   background: #c8ecee;
+}
+.file-label input {
+   display: none;
+}
+
+/* BUTTON */
+button {
+   padding: 13px 28px;
+   border-radius: 50px;
+   border: none;
+   background: var(--teal);
+   color: white;
+   font-family: "Nunito", sans-serif;
+   font-weight: 900;
+   font-size: 15px;
+   cursor: pointer;
+   transition:
+      background 0.2s,
+      transform 0.15s;
+}
+button:hover {
+   background: var(--teal-dark);
+   transform: translateY(-1px);
+}
+
+/* STATUS */
+.form-status {
+   font-size: 14px;
+   font-weight: 700;
+   text-align: center;
+   min-height: 20px;
+}
+.form-status.error {
+   color: var(--pink);
+}
+.form-status.success {
+   color: var(--green);
+}
+
+/* PRODUCTS LIST */
+.admin-list-section h3 {
+   font-family: "Pacifico", cursive;
+   font-size: 22px;
+   color: var(--teal-dark);
+   margin-bottom: 20px;
+}
+.loading {
+   color: #7a9a9c;
+   font-weight: 700;
+   text-align: center;
+   padding: 30px 0;
+}
+.no-products {
+   color: #7a9a9c;
+   font-weight: 700;
+   text-align: center;
+   padding: 30px 0;
+}
+
+.product-card {
+   background: var(--white);
+   border-radius: 20px;
+   padding: 20px;
+   display: flex;
+   gap: 18px;
+   align-items: center;
+   margin-bottom: 16px;
+   box-shadow: 0 4px 16px rgba(0, 0, 0, 0.06);
+   transition: box-shadow 0.2s;
+}
+.product-card:hover {
+   box-shadow: 0 8px 24px rgba(0, 0, 0, 0.1);
+}
+.product-card img {
+   width: 80px;
+   height: 80px;
+   object-fit: cover;
+   border-radius: 12px;
+   flex-shrink: 0;
+}
+.product-info {
+   flex: 1;
+}
+.product-info h4 {
+   font-size: 16px;
+   font-weight: 900;
+   color: var(--text);
+   margin-bottom: 5px;
+}
+.product-info p {
+   font-size: 13px;
+   color: #5a8a8c;
+   font-weight: 600;
+   line-height: 1.5;
+}
+.product-price {
+   display: inline-block;
+   margin-top: 6px;
+   font-family: "Pacifico", cursive;
+   font-size: 16px;
+   color: var(--teal-dark);
+}
+.delete-btn {
+   background: var(--red);
+   padding: 8px 18px;
+   font-size: 13px;
+   flex-shrink: 0;
+}
+.delete-btn:hover {
+   background: #c0392b;
+   transform: none;
+}
+
+@media (max-width: 500px) {
+   .product-card {
+      flex-wrap: wrap;
+   }
+   .delete-btn {
+      width: 100%;
+      text-align: center;
+   }
+}

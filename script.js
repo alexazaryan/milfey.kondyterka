@@ -1,78 +1,86 @@
-const products = [
-   {
-      id: 1,
-      name: "Кокосовий торт",
-      sub: "Вафельний, 80 г",
-      price: 45,
-      emoji: "🥥",
-      bg: "#5dcad022",
-   },
-   {
-      id: 2,
-      name: "Зі згущеним молоком",
-      sub: "Вафельний, 80 г",
-      price: 45,
-      emoji: "🥛",
-      bg: "#48a9ef22",
-   },
-   {
-      id: 3,
-      name: "Шоколадний",
-      sub: "Вафельний, 80 г",
-      price: 48,
-      emoji: "🍫",
-      bg: "#a0785022",
-   },
-   {
-      id: 4,
-      name: "Полуничний",
-      sub: "Вафельний, 80 г",
-      price: 48,
-      emoji: "🍓",
-      bg: "#f7a8b822",
-   },
-   {
-      id: 5,
-      name: "Ванільний",
-      sub: "Вафельний, 80 г",
-      price: 43,
-      emoji: "🍦",
-      bg: "#f6e8a122",
-   },
-   {
-      id: 6,
-      name: "Арахісовий",
-      sub: "Вафельний, 80 г",
-      price: 50,
-      emoji: "🥜",
-      bg: "#c9a87c22",
-   },
-];
+import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.0/firebase-app.js";
+import {
+   getFirestore,
+   collection,
+   getDocs,
+   query,
+   orderBy,
+} from "https://www.gstatic.com/firebasejs/11.6.0/firebase-firestore.js";
 
+const firebaseConfig = {
+   apiKey: "AIzaSyBMScsarZua1lDu29-oc4P74-Km3GItMsg",
+   authDomain: "milfey-kondyterka.firebaseapp.com",
+   projectId: "milfey-kondyterka",
+   storageBucket: "milfey-kondyterka.firebasestorage.app",
+   messagingSenderId: "68782081603",
+   appId: "1:68782081603:web:c8ebf7a592707fe3cd76f6",
+};
+
+const app = initializeApp(firebaseConfig);
+const db = getFirestore(app);
+
+/* ======================
+   CART STATE
+   ====================== */
 let cart = {};
+let products = [];
 
+/* ======================
+   LOAD PRODUCTS FROM FIREBASE
+   ====================== */
+async function loadProducts() {
+   try {
+      const q = query(collection(db, "products"), orderBy("createdAt", "desc"));
+      const snapshot = await getDocs(q);
+      products = snapshot.docs.map((doc) => ({ id: doc.id, ...doc.data() }));
+      renderProducts();
+   } catch (e) {
+      console.error("Помилка завантаження товарів:", e);
+      renderProducts();
+   }
+}
+
+/* ======================
+   RENDER PRODUCTS
+   ====================== */
 function renderProducts() {
-   document.getElementById("productGrid").innerHTML = products
+   const grid = document.getElementById("productGrid");
+
+   if (!products.length) {
+      grid.innerHTML = `
+      <div class="products-empty">
+        <div class="products-empty-icon">🧇</div>
+        <p class="products-empty-title">Незабаром тут з'являться смаколики!</p>
+        <p class="products-empty-sub">Ми вже готуємо асортимент — заходьте пізніше</p>
+      </div>`;
+      return;
+   }
+
+   grid.innerHTML = `<div class="products">${products
       .map(
          (p, i) => `
-    <div class="card" style="transition-delay:${i * 120}ms">
-      <div class="card-img" style="background:${p.bg}">
-        <span style="filter:drop-shadow(0 4px 10px rgba(0,0,0,.12))">${p.emoji}</span>
+    <div class="card" style="transition-delay:${i * 100}ms">
+      <div class="card-img">
+        <img src="${p.photoUrl}" alt="${p.name}" loading="lazy" />
       </div>
       <div class="card-body">
         <div class="card-name">${p.name}</div>
-        <div class="card-sub">${p.sub}</div>
+        <div class="card-sub">${p.desc}</div>
         <div class="card-footer">
           <div class="price">${p.price} <small>грн</small></div>
-          <button class="add-btn" id="btn-${p.id}" onclick="addToCart(${p.id})">В кошик</button>
+          <button class="add-btn" id="btn-${p.id}" onclick="addToCart('${p.id}')">В кошик</button>
         </div>
       </div>
     </div>`,
       )
-      .join("");
+      .join("")}</div>`;
+
    animateCards();
 }
 
+/* ======================
+   CARD ANIMATION
+   ====================== */
 function animateCards() {
    const cards = document.querySelectorAll(".card");
    if ("IntersectionObserver" in window) {
@@ -93,28 +101,23 @@ function animateCards() {
    }
 }
 
-function addToCart(id) {
+/* ======================
+   CART
+   ====================== */
+window.addToCart = function (id) {
    if (cart[id]) return;
    cart[id] = 1;
    updateCartUI();
    const btn = document.getElementById("btn-" + id);
-   btn.textContent = "✓ Додано";
-   btn.classList.add("added");
-}
-
-function removeFromCart(id) {
-   delete cart[id];
-   updateCartUI();
-   const btn = document.getElementById("btn-" + id);
    if (btn) {
-      btn.textContent = "В кошик";
-      btn.classList.remove("added");
+      btn.textContent = "✓ Додано";
+      btn.classList.add("added");
    }
-}
+};
 
-function changeQty(id, delta) {
+window.changeQty = function (id, delta) {
    if (!cart[id]) return;
-   cart[id] = cart[id] + delta;
+   cart[id] += delta;
    if (cart[id] <= 0) {
       delete cart[id];
       const btn = document.getElementById("btn-" + id);
@@ -124,7 +127,7 @@ function changeQty(id, delta) {
       }
    }
    updateCartUI();
-}
+};
 
 function updateCartUI() {
    const total = Object.values(cart).reduce((a, b) => a + b, 0);
@@ -137,109 +140,101 @@ function renderCartItems() {
    const body = document.getElementById("drawerBody");
    const foot = document.getElementById("drawerFoot");
    const keys = Object.keys(cart);
+
    if (!keys.length) {
-      body.innerHTML = `<div class="drawer-empty">
-      <div style="font-size:56px;margin-bottom:16px;">🛒</div>
-      <p style="font-size:16px;font-weight:900;color:#1a3335;margin-bottom:8px;">Кошик порожній</p>
-      <p style="font-size:14px;color:#4a7a7c;">Додайте щось смачне<br>з нашого каталогу!</p>
-      <button class="btn-teal" onclick="toggleCart()" style="margin-top:20px;padding:10px 24px;font-size:14px;">Перейти до каталогу</button>
-    </div>`;
+      body.innerHTML = `
+      <div class="drawer-empty">
+        <div style="font-size:56px;margin-bottom:16px;">🛒</div>
+        <p style="font-size:16px;font-weight:900;color:#1a3335;margin-bottom:8px;">Кошик порожній</p>
+        <p style="font-size:14px;color:#4a7a7c;">Додайте щось смачне<br>з нашого каталогу!</p>
+        <button class="btn-teal" onclick="toggleCart()" style="margin-top:20px;padding:10px 24px;font-size:14px;">Перейти до каталогу</button>
+      </div>`;
       foot.style.display = "none";
       return;
    }
+
    let sum = 0,
       html = "";
    keys.forEach((id) => {
-      const p = products.find((x) => x.id == id),
-         qty = cart[id];
+      const p = products.find((x) => x.id === id);
+      if (!p) return;
+      const qty = cart[id];
       sum += p.price * qty;
-      html += `<div class="cart-item">
-      <div class="cart-item-icon">${p.emoji}</div>
-      <div class="cart-item-info">
-        <div class="cart-item-name">${p.name}</div>
-        <div class="cart-item-price">${p.price} грн × ${qty} = ${p.price * qty} грн</div>
-      </div>
-      <div class="qty-ctrl">
-        <button class="qty-btn" onclick="changeQty(${id},-1)">−</button>
-        <span class="qty-num">${qty}</span>
-        <button class="qty-btn" onclick="changeQty(${id},1)">+</button>
-      </div>
-    </div>`;
+      html += `
+      <div class="cart-item">
+        <div class="cart-item-icon"><img src="${p.photoUrl}" alt="${p.name}" style="width:100%;height:100%;object-fit:cover;border-radius:10px;" /></div>
+        <div class="cart-item-info">
+          <div class="cart-item-name">${p.name}</div>
+          <div class="cart-item-price">${p.price} грн × ${qty} = ${p.price * qty} грн</div>
+        </div>
+        <div class="qty-ctrl">
+          <button class="qty-btn" onclick="changeQty('${id}',-1)">−</button>
+          <span class="qty-num">${qty}</span>
+          <button class="qty-btn" onclick="changeQty('${id}',1)">+</button>
+        </div>
+      </div>`;
    });
+
    body.innerHTML = html;
    foot.style.display = "";
    document.getElementById("totalPrice").textContent = sum + " грн";
 }
 
-function toggleCart() {
+/* ======================
+   DRAWER / SCREENS
+   ====================== */
+window.toggleCart = function () {
    const isOpen = document.getElementById("drawer").classList.contains("open");
    document.getElementById("drawer").classList.toggle("open");
    document.getElementById("drawerOverlay").classList.toggle("open");
    document.body.style.overflow = isOpen ? "" : "hidden";
    if (!isOpen) showScreen("screenCart", "left");
-}
+};
 
-function showScreen(toId, dir) {
-   const all = document.querySelectorAll(".drawer-screen");
-   const current = document.querySelector(".drawer-screen.active");
+window.showScreen = function (toId, dir) {
    if (!dir) dir = "right";
-
-   all.forEach((s) => {
+   document.querySelectorAll(".drawer-screen").forEach((s) => {
       s.classList.remove("active", "left", "right");
       s.classList.add(
          s.id === toId ? "active" : dir === "right" ? "left" : "right",
       );
    });
-   const target = document.getElementById(toId);
-   target.classList.remove("left", "right");
-   target.classList.add("active");
-
    if (toId === "screenOrder") fillOrderSummary();
-}
-
-function initPhone() {
-   const ph = document.getElementById("fPhone");
-   if (!ph) return;
-   ph.value = "+380";
-   ph.addEventListener("focus", function () {
-      if (!this.value) this.value = "+380";
-   });
-}
+};
 
 function fillOrderSummary() {
    const keys = Object.keys(cart);
    let sum = 0,
       html = "";
    keys.forEach((id) => {
-      const p = products.find((x) => x.id == id),
-         qty = cart[id];
+      const p = products.find((x) => x.id === id);
+      if (!p) return;
+      const qty = cart[id];
       sum += p.price * qty;
-      html += `<div class="order-summary-item"><span>${p.emoji} ${p.name} × ${qty}</span><span>${p.price * qty} грн</span></div>`;
+      html += `<div class="order-summary-item"><span>${p.name} × ${qty}</span><span>${p.price * qty} грн</span></div>`;
    });
    html += `<div class="order-summary-total"><span>Разом</span><span>${sum} грн</span></div>`;
    document.getElementById("orderSummary").innerHTML =
       '<div class="order-summary-title">Ваше замовлення</div>' + html;
 }
 
-function submitOrder() {
+/* ======================
+   ORDER FORM
+   ====================== */
+window.submitOrder = function () {
    const fields = [
-      { id: "fName", val: document.getElementById("fName").value.trim() },
-      {
-         id: "fLastName",
-         val: document.getElementById("fLastName").value.trim(),
-      },
-      { id: "fPhone", val: document.getElementById("fPhone").value.trim() },
-      { id: "fCity", val: document.getElementById("fCity").value.trim() },
-      { id: "fNova", val: document.getElementById("fNova").value.trim() },
+      { id: "fName" },
+      { id: "fLastName" },
+      { id: "fPhone" },
+      { id: "fCity" },
+      { id: "fNova" },
    ];
 
    let hasError = false;
    fields.forEach((f) => {
       const el = document.getElementById(f.id);
-      if (
-         !f.val ||
-         (f.id === "fPhone" && f.val.replace(/\D/g, "").length < 10)
-      ) {
+      const val = el.value.trim();
+      if (!val || (f.id === "fPhone" && val.replace(/\D/g, "").length < 10)) {
          el.classList.add("error");
          el.addEventListener("input", () => el.classList.remove("error"), {
             once: true,
@@ -252,7 +247,6 @@ function submitOrder() {
 
    if (hasError) return;
 
-   // Тут буде відправка в Telegram бот
    cart = {};
    updateCartUI();
    document.querySelectorAll(".add-btn").forEach((btn) => {
@@ -260,27 +254,47 @@ function submitOrder() {
       btn.classList.remove("added");
    });
    showScreen("screenSuccess", "right");
-}
+};
 
-function toggleAbout() {
+/* ======================
+   ABOUT MODAL
+   ====================== */
+window.toggleAbout = function () {
    document.getElementById("aboutOverlay").classList.toggle("open");
    document.body.style.overflow = document
       .getElementById("aboutOverlay")
       .classList.contains("open")
       ? "hidden"
       : "";
-}
+};
 
-function closeOnBg(e, id, fn) {
+window.closeOnBg = function (e, id, fn) {
    if (e.target.id === id) fn();
-}
+};
 
-function toggleMenu() {
+/* ======================
+   MOBILE MENU
+   ====================== */
+window.toggleMenu = function () {
    document.getElementById("mobileMenu").classList.toggle("open");
    document.getElementById("burgerBtn").classList.toggle("open");
+};
+
+/* ======================
+   PHONE PREFIX
+   ====================== */
+function initPhone() {
+   const ph = document.getElementById("fPhone");
+   if (!ph) return;
+   ph.value = "+380";
+   ph.addEventListener("focus", function () {
+      if (!this.value) this.value = "+380";
+   });
 }
 
-// Инициализация
-renderProducts();
+/* ======================
+   INIT
+   ====================== */
 initPhone();
 renderCartItems();
+loadProducts();
