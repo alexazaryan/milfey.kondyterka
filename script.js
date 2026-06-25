@@ -345,3 +345,24 @@ function initPhone() {
 initPhone();
 renderCartItems();
 loadProducts();
+
+/* ======================
+   HERO PARALLAX 3D
+   ====================== */
+const heroImg = document.querySelector(".hero-img img");
+if (heroImg) {
+   document.querySelector(".hero").addEventListener("mousemove", (e) => {
+      const rect = e.currentTarget.getBoundingClientRect();
+      const x = (e.clientX - rect.left) / rect.width - 0.5;
+      const y = (e.clientY - rect.top) / rect.height - 0.5;
+      heroImg.style.transform = `
+   translate(${x * 60}px, ${y * 40}px)
+   rotateY(${x * 30}deg)
+   rotateX(${-y * 30}deg)
+   scale(${1 + Math.abs(x) * 0.1 + Math.abs(y) * 0.1})
+`;
+   });
+   document.querySelector(".hero").addEventListener("mouseleave", () => {
+      heroImg.style.transform = "translate(0,0) rotateY(0) rotateX(0) scale(1)";
+   });
+}

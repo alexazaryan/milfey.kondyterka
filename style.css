@@ -52,7 +52,7 @@ body {
 .nav-logo {
    font-family: "Pacifico", cursive;
    color: var(--white);
-   font-size: 24px;
+   font-size: 30px;
    text-decoration: none;
    letter-spacing: 0.5px;
 }
@@ -108,7 +108,7 @@ body {
 .nav-mobile-right {
    display: none;
    align-items: center;
-   gap: 12px;
+   gap: 25px;
 }
 .nav-cart-mobile {
    background: var(--white);
@@ -245,10 +245,53 @@ body {
    background: var(--cream);
    clip-path: ellipse(55% 100% at 50% 100%);
 }
+
+/* блок hero start */
 .hero-inner {
    position: relative;
    z-index: 1;
+   max-width: 1200px;
+   margin: 0 auto;
+   display: flex;
+   align-items: center;
+   justify-content: space-between;
+   gap: 40px;
 }
+.hero-text {
+   flex: 1;
+   text-align: left;
+   opacity: 0;
+   transform: translateX(-60px);
+   animation: slideFromLeft 0.9s ease forwards 0.2s;
+}
+.hero-img {
+   flex: 1;
+   display: flex;
+   justify-content: flex-end;
+   opacity: 0;
+   transform: translateX(60px);
+   animation: slideFromRight 0.9s ease forwards 0.2s;
+}
+.hero-img img {
+   max-width: 100%;
+   max-height: 380px;
+   object-fit: contain;
+   filter: drop-shadow(0 20px 40px rgba(0, 0, 0, 0.2));
+}
+@keyframes slideFromLeft {
+   to {
+      opacity: 1;
+      transform: translateX(0);
+   }
+}
+@keyframes slideFromRight {
+   to {
+      opacity: 1;
+      transform: translateX(0);
+   }
+}
+
+/* hero end */
 .hero h1 {
    font-family: "Pacifico", cursive;
    font-size: clamp(32px, 6vw, 62px);
@@ -442,6 +485,9 @@ body {
    font-size: clamp(22px, 4vw, 34px);
    color: var(--white);
    margin-bottom: 40px;
+   -webkit-font-smoothing: antialiased;
+   -moz-osx-font-smoothing: grayscale;
+   text-rendering: optimizeLegibility;
 }
 .why-grid {
    display: flex;
@@ -498,7 +544,7 @@ body {
 }
 .footer-dev {
    margin-top: 14px;
-   font-size: 12px;
+   font-size: 15px;
    opacity: 0.65;
 }
 .footer-dev a {
@@ -899,11 +945,23 @@ body {
 
 /* RESPONSIVE */
 @media (max-width: 900px) {
+   .hero-text {
+      text-align: center;
+   }
    .products {
       grid-template-columns: repeat(2, 1fr);
    }
 }
 @media (max-width: 640px) {
+   .hero-inner {
+      flex-direction: column;
+   }
+   .hero-text {
+      text-align: center;
+   }
+   .hero-img {
+      display: none;
+   }
    .nav {
       padding: 12px 20px;
    }
@@ -954,4 +1012,16 @@ body {
       align-items: flex-end;
       padding: 0;
    }
+}
+
+/* HERO PARALLAX */
+.hero-img img {
+   max-width: 100%;
+   max-height: 380px;
+   object-fit: contain;
+   filter: drop-shadow(0 20px 40px rgba(0, 0, 0, 0.2));
+   transition: transform 0.15s ease;
+}
+.hero-img {
+   perspective: 1000px;
 }
