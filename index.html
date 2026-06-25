@@ -4,6 +4,22 @@
       <meta charset="UTF-8" />
       <meta name="viewport" content="width=device-width, initial-scale=1.0" />
       <title>Milfey — Вафельні торти</title>
+
+      <!-- Favicon -->
+      <link rel="icon" type="image/png" href="images/logo.png" />
+
+      <!-- Open Graph -->
+      <meta property="og:title" content="Milfey — Вафельні торти" />
+      <meta
+         property="og:description"
+         content="Хрустке вафлі, ніжна начинка та лише натуральні інгредієнти"
+      />
+      <meta
+         property="og:image"
+         content="https://alexazaryan.github.io/milfey.kondyterka/images/logo.png"
+      />
+      <meta property="og:type" content="website" />
+
       <link
          href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;900&family=Pacifico&display=swap"
          rel="stylesheet"
@@ -12,41 +28,43 @@
    </head>
    <body>
       <nav class="nav">
-         <a href="#" class="nav-logo">Milfey</a>
-         <ul class="nav-links">
-            <li><a href="#catalog">Каталог</a></li>
-            <li>
-               <a
-                  href="#"
-                  onclick="
-                     toggleAbout();
-                     return false;
-                  "
-                  >Про нас</a
+         <div class="nav-container">
+            <a href="#" class="nav-logo">Milfey</a>
+            <ul class="nav-links">
+               <li><a href="#catalog">Каталог</a></li>
+               <li>
+                  <a
+                     href="#"
+                     onclick="
+                        toggleAbout();
+                        return false;
+                     "
+                     >Про нас</a
+                  >
+               </li>
+               <li><a href="#contact">Контакти</a></li>
+            </ul>
+            <button class="nav-cart" onclick="toggleCart()">
+               🛒 Кошик<span class="cart-count" id="cartCountDesktop">0</span>
+            </button>
+            <div class="nav-mobile-right">
+               <button
+                  class="nav-cart-mobile"
+                  onclick="toggleCart()"
+                  aria-label="Кошик"
                >
-            </li>
-            <li><a href="#contact">Контакти</a></li>
-         </ul>
-         <button class="nav-cart" onclick="toggleCart()">
-            🛒 Кошик<span class="cart-count" id="cartCountDesktop">0</span>
-         </button>
-         <div class="nav-mobile-right">
-            <button
-               class="nav-cart-mobile"
-               onclick="toggleCart()"
-               aria-label="Кошик"
-            >
-               🛒<span class="cart-count" id="cartCountMobile">0</span>
-            </button>
-            <button
-               class="nav-burger"
-               id="burgerBtn"
-               onclick="toggleMenu()"
-               aria-label="Меню"
-            >
-               <span class="bar bar1"></span><span class="bar bar2"></span
-               ><span class="bar bar3"></span>
-            </button>
+                  🛒<span class="cart-count" id="cartCountMobile">0</span>
+               </button>
+               <button
+                  class="nav-burger"
+                  id="burgerBtn"
+                  onclick="toggleMenu()"
+                  aria-label="Меню"
+               >
+                  <span class="bar bar1"></span><span class="bar bar2"></span
+                  ><span class="bar bar3"></span>
+               </button>
+            </div>
          </div>
       </nav>
 

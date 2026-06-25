@@ -61,9 +61,32 @@ function showAdmin() {
    loadProducts();
 }
 
+/* ===================== СТИСНЕННЯ ФОТО ===================== */
+function compressImage(file, maxWidth = 800, quality = 0.82) {
+   return new Promise((resolve) => {
+      const img = new Image();
+      const url = URL.createObjectURL(file);
+      img.onload = () => {
+         URL.revokeObjectURL(url);
+         let w = img.width;
+         let h = img.height;
+         if (w > maxWidth) {
+            h = Math.round((h * maxWidth) / w);
+            w = maxWidth;
+         }
+         const canvas = document.createElement("canvas");
+         canvas.width = w;
+         canvas.height = h;
+         canvas.getContext("2d").drawImage(img, 0, 0, w, h);
+         resolve(canvas.toDataURL("image/jpeg", quality));
+      };
+      img.src = url;
+   });
+}
+
 /* ===================== IMGBB ===================== */
 async function uploadPhoto(file) {
-   const base64 = await toBase64(file);
+   const base64 = await compressImage(file);
    const formData = new FormData();
    formData.append("image", base64.split(",")[1]);
    const res = await fetch(
@@ -72,15 +95,6 @@ async function uploadPhoto(file) {
    );
    const data = await res.json();
    return data.data.url;
-}
-
-function toBase64(file) {
-   return new Promise((resolve, reject) => {
-      const reader = new FileReader();
-      reader.onload = () => resolve(reader.result);
-      reader.onerror = reject;
-      reader.readAsDataURL(file);
-   });
 }
 
 /* ===================== ДОДАТИ ТОВАР ===================== */
@@ -97,7 +111,7 @@ window.addProduct = async function () {
       return;
    }
 
-   status.textContent = "Завантаження фото...";
+   status.textContent = "Стиснення та завантаження фото...";
    status.className = "form-status";
 
    try {
@@ -119,8 +133,8 @@ window.addProduct = async function () {
       document.getElementById("p-desc").value = "";
       document.getElementById("p-price").value = "";
       document.getElementById("p-photo").value = "";
-      document.getElementById("name-count").textContent = "0/25";
-      document.getElementById("desc-count").textContent = "0/100";
+      document.getElementById("name-count").textContent = "0/35";
+      document.getElementById("desc-count").textContent = "0/150";
       document.getElementById("photo-preview").style.display = "none";
       loadProducts();
    } catch (e) {
@@ -166,11 +180,11 @@ window.deleteProduct = async function (id) {
 /* ===================== ЛІЧИЛЬНИКИ ===================== */
 document.getElementById("p-name").addEventListener("input", function () {
    document.getElementById("name-count").textContent =
-      this.value.length + "/25";
+      this.value.length + "/35";
 });
 document.getElementById("p-desc").addEventListener("input", function () {
    document.getElementById("desc-count").textContent =
-      this.value.length + "/100";
+      this.value.length + "/150";
 });
 
 /* ===================== ПРЕВЬЮ ФОТО ===================== */

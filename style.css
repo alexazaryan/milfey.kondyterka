@@ -35,15 +35,21 @@ body {
 /* NAV */
 .nav {
    background: var(--teal);
-   display: flex;
-   align-items: center;
-   justify-content: space-between;
    padding: 14px 40px;
    position: sticky;
    top: 0;
    z-index: 100;
    box-shadow: 0 3px 12px rgba(0, 0, 0, 0.18);
 }
+
+.nav-container {
+   max-width: 1200px;
+   margin: 0 auto;
+   display: flex;
+   align-items: center;
+   justify-content: space-between;
+}
+
 .nav-logo {
    font-family: "Pacifico", cursive;
    color: var(--white);
