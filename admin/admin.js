@@ -170,7 +170,7 @@ async function loadProducts() {
    });
 }
 
-/* ===================== ВИДАЛИТИ ===================== */
+/* ===================== ВИДАЛИТИ ==================== */
 window.deleteProduct = async function (id) {
    if (!confirm("Видалити цей товар?")) return;
    await deleteDoc(doc(db, "products", id));
