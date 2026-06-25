@@ -41,7 +41,6 @@ body {
    z-index: 100;
    box-shadow: 0 3px 12px rgba(0, 0, 0, 0.18);
 }
-
 .nav-container {
    max-width: 1200px;
    margin: 0 auto;
