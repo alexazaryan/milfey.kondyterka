@@ -66,6 +66,10 @@ function renderProducts() {
       <div class="card-body">
         <div class="card-name">${p.name}</div>
         <div class="card-sub">${p.desc}</div>
+        <div class="card-meta">
+   ${p.weight ? `⚖️ ${p.weight}` : ""}
+   ${p.shelf ? `📅 ${p.shelf}` : ""}
+</div>
         <div class="card-footer">
           <div class="price">${p.price} <small>грн</small></div>
           <button class="add-btn" id="btn-${p.id}" onclick="addToCart('${p.id}')">В кошик</button>
