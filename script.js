@@ -67,8 +67,8 @@ function renderProducts() {
         <div class="card-name">${p.name}</div>
         <div class="card-sub">${p.desc}</div>
         <div class="card-meta">
-   ${p.weight ? `⚖️ ${p.weight}` : ""}
-   ${p.shelf ? `📅 ${p.shelf}` : ""}
+${p.weight ? `${p.weight} кг` : ""}
+${p.shelf ? `${p.shelf}` : ""}
 </div>
         <div class="card-footer">
           <div class="price">${p.price} <small>грн</small></div>
