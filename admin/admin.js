@@ -123,6 +123,7 @@ window.addProduct = async function () {
          desc,
          price: Number(price),
          weight,
+         shelf,
          photoUrl,
          createdAt: Date.now(),
       });
