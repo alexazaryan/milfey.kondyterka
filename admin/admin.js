@@ -105,7 +105,7 @@ window.addProduct = async function () {
    const photoFile = document.getElementById("p-photo").files[0];
    const status = document.getElementById("form-status");
    const weight = document.getElementById("p-weight").value.trim();
-   const shelf = document.getElementById("p-shelf").value.trim();
+   // const shelf = document.getElementById("p-shelf").value.trim();
 
    if (!name || !desc || !price || !photoFile) {
       status.textContent = "⚠️ Заповніть всі поля!";
@@ -123,7 +123,7 @@ window.addProduct = async function () {
          desc,
          price: Number(price),
          weight,
-         shelf,
+         // shelf,
          photoUrl,
          createdAt: Date.now(),
       });
