@@ -1074,3 +1074,10 @@ body {
    height: 60px;
    display: block;
 }
+/* футер лого */
+.footer-logo-img {
+   height: 50px;
+   display: block;
+   margin: 0 auto;
+   filter: brightness(0) invert(1);
+}
