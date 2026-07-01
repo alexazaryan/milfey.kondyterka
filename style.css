@@ -217,22 +217,10 @@ body {
    content: "";
    position: absolute;
    inset: 0;
-   background-image:
-      radial-gradient(circle, var(--pink) 2px, transparent 2px),
-      radial-gradient(circle, var(--yellow) 2px, transparent 2px),
-      radial-gradient(circle, var(--green) 2px, transparent 2px),
-      radial-gradient(circle, #4d96ff 2px, transparent 2px);
-   background-size:
-      130px 130px,
-      90px 90px,
-      110px 110px,
-      100px 100px;
-   background-position:
-      10px 10px,
-      45px 65px,
-      75px 25px,
-      25px 85px;
-   opacity: 0.38;
+   background-image: url("data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxNjAiIGhlaWdodD0iMTYwIj4KICA8cmVjdCB4PSIxNCIgeT0iMjAiIHdpZHRoPSIxNCIgaGVpZ2h0PSI0IiByeD0iMiIgZmlsbD0iI2ZmNmI5ZCIgdHJhbnNmb3JtPSJyb3RhdGUoMjUgMjEgMjIpIi8+CiAgPHJlY3QgeD0iNzAiIHk9IjEwIiB3aWR0aD0iMTQiIGhlaWdodD0iNCIgcng9IjIiIGZpbGw9IiNmZmQ5M2QiIHRyYW5zZm9ybT0icm90YXRlKC0zNSA3NyAxMikiLz4KICA8cmVjdCB4PSIxMjAiIHk9IjM1IiB3aWR0aD0iMTQiIGhlaWdodD0iNCIgcng9IjIiIGZpbGw9IiNmZmZmZmYiIHRyYW5zZm9ybT0icm90YXRlKDYwIDEyNyAzNykiLz4KICA8cmVjdCB4PSIzMCIgeT0iNzAiIHdpZHRoPSIxNCIgaGVpZ2h0PSI0IiByeD0iMiIgZmlsbD0iI2ZmZDkzZCIgdHJhbnNmb3JtPSJyb3RhdGUoLTEwIDM3IDcyKSIvPgogIDxyZWN0IHg9Ijk1IiB5PSI4MCIgd2lkdGg9IjE0IiBoZWlnaHQ9IjQiIHJ4PSIyIiBmaWxsPSIjZmY2YjlkIiB0cmFuc2Zvcm09InJvdGF0ZSg4MCAxMDIgODIpIi8+CiAgPHJlY3QgeD0iMTAiIHk9IjExMCIgd2lkdGg9IjE0IiBoZWlnaHQ9IjQiIHJ4PSIyIiBmaWxsPSIjZmZmZmZmIiB0cmFuc2Zvcm09InJvdGF0ZSgxNSAxNyAxMTIpIi8+CiAgPHJlY3QgeD0iNTUiIHk9IjEyMCIgd2lkdGg9IjE0IiBoZWlnaHQ9IjQiIHJ4PSIyIiBmaWxsPSIjZmY2YjlkIiB0cmFuc2Zvcm09InJvdGF0ZSgtNTAgNjIgMTIyKSIvPgogIDxyZWN0IHg9IjEzMCIgeT0iMTAwIiB3aWR0aD0iMTQiIGhlaWdodD0iNCIgcng9IjIiIGZpbGw9IiNmZmQ5M2QiIHRyYW5zZm9ybT0icm90YXRlKDQwIDEzNyAxMDIpIi8+CiAgPHJlY3QgeD0iMTQwIiB5PSIxNDAiIHdpZHRoPSIxNCIgaGVpZ2h0PSI0IiByeD0iMiIgZmlsbD0iI2ZmZmZmZiIgdHJhbnNmb3JtPSJyb3RhdGUoLTI1IDE0NyAxNDIpIi8+CiAgPHJlY3QgeD0iMCIgeT0iMTQ1IiB3aWR0aD0iMTQiIGhlaWdodD0iNCIgcng9IjIiIGZpbGw9IiNmZjZiOWQiIHRyYW5zZm9ybT0icm90YXRlKDEwIDcgMTQ3KSIvPgo8L3N2Zz4K");
+   background-repeat: repeat;
+   background-size: 160px 160px;
+   opacity: 0.55;
    pointer-events: none;
 }
 .hero::after {
@@ -1071,7 +1059,6 @@ body {
    }
 }
 
-
 /* вес */
 .card-meta {
    font-size: 12px;
@@ -1080,4 +1067,10 @@ body {
    margin-bottom: 10px;
    display: flex;
    gap: 12px;
+}
+
+/* лого */
+.nav-logo-img {
+   height: 60px;
+   display: block;
 }
