@@ -130,10 +130,15 @@ window.changeQty = function (id, delta) {
    updateCartUI();
 };
 
+// card
 function updateCartUI() {
    const total = Object.values(cart).reduce((a, b) => a + b, 0);
-   document.getElementById("cartCountDesktop").textContent = total;
-   document.getElementById("cartCountMobile").textContent = total;
+   const desktopCount = document.getElementById("cartCountDesktop");
+   const mobileCount = document.getElementById("cartCountMobile");
+   desktopCount.textContent = total;
+   mobileCount.textContent = total;
+   desktopCount.classList.toggle("has-items", total > 0);
+   mobileCount.classList.toggle("has-items", total > 0);
    renderCartItems();
 }
 
@@ -362,3 +367,96 @@ if (heroImg) {
       heroImg.style.transform = "translate(0,0) rotateY(0) rotateX(0) scale(1)";
    });
 }
+
+// FAQ
+window.toggleFaq = function (btn) {
+   const item = btn.closest(".faq-item");
+   const wasOpen = item.classList.contains("open");
+   document
+      .querySelectorAll(".faq-item.open")
+      .forEach((el) => el.classList.remove("open"));
+   if (!wasOpen) item.classList.add("open");
+};
+
+/* ======================
+   PARTNER BANNER / FORM
+   ====================== */
+setTimeout(() => {
+   const banner = document.getElementById("partnerBanner");
+   if (banner) banner.classList.add("show");
+}, 3000);
+
+window.closePartnerBanner = function (e) {
+   e.stopPropagation();
+   document.getElementById("partnerBanner").classList.remove("show");
+};
+
+window.openPartnerForm = function () {
+   const banner = document.getElementById("partnerBanner");
+   if (banner) banner.classList.remove("show");
+   document.getElementById("partnerOverlay").classList.add("open");
+   document.body.style.overflow = "hidden";
+   const callBtn = document.getElementById("callBtn");
+   if (callBtn) callBtn.style.display = "none";
+};
+
+window.closePartnerForm = function () {
+   document.getElementById("partnerOverlay").classList.remove("open");
+   document.body.style.overflow = "";
+   const callBtn = document.getElementById("callBtn");
+   if (callBtn) callBtn.style.display = "";
+};
+
+window.selectTime = function (btn) {
+   document
+      .querySelectorAll(".time-btn")
+      .forEach((b) => b.classList.remove("active"));
+   btn.classList.add("active");
+};
+
+window.submitPartnerForm = async function () {
+   const nameEl = document.getElementById("pName");
+   const phoneEl = document.getElementById("pPhone");
+   const btn = document.querySelector("#partnerOverlay .btn-teal");
+   let hasError = false;
+
+   [nameEl, phoneEl].forEach((el) => {
+      const val = el.value.trim();
+      if (!val || (el === phoneEl && val.replace(/\D/g, "").length < 10)) {
+         el.classList.add("error");
+         el.addEventListener("input", () => el.classList.remove("error"), {
+            once: true,
+         });
+         hasError = true;
+      } else {
+         el.classList.remove("error");
+      }
+   });
+   if (hasError) return;
+
+   const activeTimeBtn = document.querySelector(".time-btn.active");
+   const fields = {
+      "Ім'я та прізвище": nameEl.value.trim(),
+      Телефон: phoneEl.value.trim(),
+   };
+   if (activeTimeBtn) fields["Зручний час"] = activeTimeBtn.textContent;
+
+   await sendTelegramNotification(fields, "Milfey — Співпраця");
+
+   btn.textContent = "✓ Заявку відправлено";
+   btn.style.background = "var(--green)";
+   btn.disabled = true;
+
+   nameEl.value = "";
+   phoneEl.value = "";
+   document
+      .querySelectorAll(".time-btn")
+      .forEach((b) => b.classList.remove("active"));
+
+   setTimeout(() => {
+      closePartnerForm();
+      btn.textContent = "Відправити заявку →";
+      btn.style.background = "";
+      btn.disabled = false;
+   }, 2000);
+};

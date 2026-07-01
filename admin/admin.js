@@ -137,6 +137,7 @@ window.addProduct = async function () {
       document.getElementById("p-desc").value = "";
       document.getElementById("p-price").value = "";
       document.getElementById("p-photo").value = "";
+      document.getElementById("p-weight").value = "";
       document.getElementById("name-count").textContent = "0/35";
       document.getElementById("desc-count").textContent = "0/300";
       document.getElementById("photo-preview").style.display = "none";

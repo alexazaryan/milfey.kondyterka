@@ -82,6 +82,17 @@
                      >Про нас</a
                   >
                </li>
+               <li>
+                  <a
+                     href="#"
+                     onclick="
+                        openPartnerForm();
+                        return false;
+                     "
+                     >Співпраця</a
+                  >
+               </li>
+               <li><a href="#faq">FAQ</a></li>
                <li><a href="#contact">Контакти</a></li>
             </ul>
             <button class="nav-cart" onclick="toggleCart()">
@@ -118,6 +129,15 @@
             "
             >Про нас</a
          >
+         <a
+            href="#"
+            onclick="
+               toggleMenu();
+               openPartnerForm();
+            "
+            >Співпраця</a
+         >
+         <a href="#faq" onclick="toggleMenu()">FAQ</a>
          <a href="#contact" onclick="toggleMenu()">Контакти</a>
       </div>
 
@@ -185,6 +205,139 @@
          </div>
       </div>
 
+      <!-- FAQ -->
+      <section class="section" id="faq">
+         <div class="section-label">Питання та відповіді</div>
+         <h2 class="section-title">Поширені запитання</h2>
+         <div class="faq-list">
+            <div class="faq-item">
+               <button class="faq-question" onclick="toggleFaq(this)">
+                  Чи працюєте ви з оптовими замовленнями?
+                  <span class="faq-icon">+</span>
+               </button>
+               <div class="faq-answer">
+                  <p>
+                     Так. Ми співпрацюємо з кав'ярнями, магазинами,
+                     торговельними мережами, дистриб'юторами та іншими
+                     партнерами по всій Україні.
+                  </p>
+               </div>
+            </div>
+            <div class="faq-item">
+               <button class="faq-question" onclick="toggleFaq(this)">
+                  Чи можна замовити продукцію в роздріб?
+                  <span class="faq-icon">+</span>
+               </button>
+               <div class="faq-answer">
+                  <p>Так, ми також здійснюємо відвантаження фізичним особам.</p>
+               </div>
+            </div>
+            <div class="faq-item">
+               <button class="faq-question" onclick="toggleFaq(this)">
+                  Як оформити замовлення?
+                  <span class="faq-icon">+</span>
+               </button>
+               <div class="faq-answer">
+                  <p>
+                     Залиште заявку на сайті, зв'яжіться з нами телефоном або
+                     напишіть у месенджери — наш менеджер допоможе оформити
+                     замовлення.
+                  </p>
+               </div>
+            </div>
+            <div class="faq-item">
+               <button class="faq-question" onclick="toggleFaq(this)">
+                  Які терміни виготовлення та відвантаження?
+                  <span class="faq-icon">+</span>
+               </button>
+               <div class="faq-answer">
+                  <p>
+                     Більшість продукції є в наявності. Відвантаження
+                     здійснюється у найкоротші терміни після підтвердження
+                     замовлення.
+                  </p>
+               </div>
+            </div>
+            <div class="faq-item">
+               <button class="faq-question" onclick="toggleFaq(this)">
+                  Чи доставляєте ви продукцію по Україні?
+                  <span class="faq-icon">+</span>
+               </button>
+               <div class="faq-answer">
+                  <p>
+                     Так, ми здійснюємо доставку по всій Україні через
+                     транспортні компанії.
+                  </p>
+               </div>
+            </div>
+            <div class="faq-item">
+               <button class="faq-question" onclick="toggleFaq(this)">
+                  Який термін придатності продукції?
+                  <span class="faq-icon">+</span>
+               </button>
+               <div class="faq-answer">
+                  <p>
+                     Термін придатності залежить від виду продукції та вказаний
+                     у картці кожного товару.
+                  </p>
+               </div>
+            </div>
+            <div class="faq-item">
+               <button class="faq-question" onclick="toggleFaq(this)">
+                  Чи має продукція індивідуальне пакування?
+                  <span class="faq-icon">+</span>
+               </button>
+               <div class="faq-answer">
+                  <p>
+                     Так. Частина асортименту представлена в індивідуальному
+                     пакуванні, що зручно для продажу в кав'ярнях, магазинах і
+                     торговельних мережах.
+                  </p>
+               </div>
+            </div>
+            <div class="faq-item">
+               <button class="faq-question" onclick="toggleFaq(this)">
+                  Чи можна виготовити продукцію під власною торговою маркою
+                  (Private Label)?
+                  <span class="faq-icon">+</span>
+               </button>
+               <div class="faq-answer">
+                  <p>
+                     Так. Ми розглядаємо можливість виробництва продукції під
+                     брендом замовника за індивідуальними умовами співпраці.
+                  </p>
+               </div>
+            </div>
+            <div class="faq-item">
+               <button class="faq-question" onclick="toggleFaq(this)">
+                  Які способи оплати доступні?
+                  <span class="faq-icon">+</span>
+               </button>
+               <div class="faq-answer">
+                  <p>
+                     Оплата здійснюється за безготівковим розрахунком. Для
+                     роздрібних покупців також доступні інші способи оплати, які
+                     уточнює менеджер.
+                  </p>
+               </div>
+            </div>
+            <div class="faq-item">
+               <button class="faq-question" onclick="toggleFaq(this)">
+                  Як зв'язатися з вами?
+                  <span class="faq-icon">+</span>
+               </button>
+               <div class="faq-answer">
+                  <p>
+                     Залиште заявку на сайті або зв'яжіться з нами за телефоном
+                     чи через месенджери — ми із задоволенням відповімо на всі
+                     ваші запитання.
+                  </p>
+               </div>
+            </div>
+         </div>
+      </section>
+
+      <!-- footer -->
       <footer class="footer" id="contact">
          <div class="footer-logo">
             <img
@@ -193,6 +346,59 @@
                class="footer-logo-img"
             />
          </div>
+
+         <!-- сети -->
+         <div class="footer-social">
+            <a
+               href="https://t.me/MILFEYiK"
+               target="_blank"
+               aria-label="Telegram"
+               class="social-icon"
+            >
+               <svg viewBox="0 0 24 24" fill="currentColor">
+                  <path
+                     d="M21.5 4.5 2.7 11.9c-1.2.5-1.2 1.2-.2 1.5l4.8 1.5 1.8 5.6c.2.6.4.8.9.8.4 0 .6-.2.9-.5l2.2-2.1 4.6 3.4c.8.5 1.4.2 1.6-.8l3-14.1c.3-1.2-.4-1.7-1.3-1.3zM8.3 13.9l9-5.7c.4-.3.8-.1.5.2l-7.3 6.6-.3 3.3-1.3-3.4z"
+                  />
+               </svg>
+            </a>
+            <a
+               href="viber://chat?number=%2B380505069090"
+               target="_blank"
+               aria-label="Viber"
+               class="social-icon"
+            >
+               <svg viewBox="0 0 24 24" fill="currentColor">
+                  <path
+                     d="M12.1 2C7 2 3.3 5.3 3.3 10c0 2.4 1 4.4 2.7 5.9-.1.9-.5 2.9-.6 3.4-.1.3.1.5.4.4.4-.1 2.7-1.2 3.7-1.7.8.2 1.6.3 2.6.3 5.1 0 8.8-3.3 8.8-8 0-4.6-3.7-8.3-8.8-8.3zm4.4 11.4c-.2.5-1 .9-1.5 1-.4.1-.9.2-2.7-.6-2.3-1-3.8-3.3-3.9-3.5-.1-.2-.9-1.2-.9-2.3 0-1.1.6-1.6.8-1.9.2-.2.5-.3.6-.3h.5c.2 0 .4 0 .5.4.2.5.7 1.8.8 1.9.1.1.1.3 0 .5-.1.2-.1.3-.3.5-.1.2-.3.4-.4.5-.2.2-.3.4-.1.7.2.3.8 1.3 1.7 2.1 1.2 1 2.1 1.4 2.5 1.5.3.1.5.1.6-.1.2-.2.7-.8.9-1.1.2-.3.4-.2.6-.1.2.1 1.5.7 1.7.8.2.1.4.2.4.3.1.2.1.7-.1 1.2z"
+                  />
+               </svg>
+            </a>
+            <a
+               href="https://www.instagram.com/milfey.konduterka?igsh=MWs0dWxydjNhamxxdw%3D%3D"
+               target="_blank"
+               aria-label="Instagram"
+               class="social-icon"
+            >
+               <svg viewBox="0 0 24 24" fill="currentColor">
+                  <path
+                     d="M12 2c-2.7 0-3.1 0-4.1.1-1.1 0-1.8.2-2.4.4-.7.3-1.2.6-1.8 1.2-.6.6-.9 1.1-1.2 1.8-.2.6-.4 1.3-.4 2.4C2 8.9 2 9.3 2 12s0 3.1.1 4.1c0 1.1.2 1.8.4 2.4.3.7.6 1.2 1.2 1.8.6.6 1.1.9 1.8 1.2.6.2 1.3.4 2.4.4C8.9 22 9.3 22 12 22s3.1 0 4.1-.1c1.1 0 1.8-.2 2.4-.4.7-.3 1.2-.6 1.8-1.2.6-.6.9-1.1 1.2-1.8.2-.6.4-1.3.4-2.4.1-1 .1-1.4.1-4.1s0-3.1-.1-4.1c0-1.1-.2-1.8-.4-2.4-.3-.7-.6-1.2-1.2-1.8-.6-.6-1.1-.9-1.8-1.2-.6-.2-1.3-.4-2.4-.4C15.1 2 14.7 2 12 2zm0 1.8c2.7 0 3 0 4 .1 1 0 1.5.2 1.9.3.5.2.8.4 1.1.7.3.3.6.7.7 1.1.2.4.3.9.3 1.9.1 1 .1 1.3.1 4s0 3-.1 4c0 1-.2 1.5-.3 1.9-.2.5-.4.8-.7 1.1-.3.3-.7.6-1.1.7-.4.2-.9.3-1.9.3-1 .1-1.3.1-4 .1s-3 0-4-.1c-1 0-1.5-.2-1.9-.3-.5-.2-.8-.4-1.1-.7-.3-.3-.6-.7-.7-1.1-.2-.4-.3-.9-.3-1.9-.1-1-.1-1.3-.1-4s0-3 .1-4c0-1 .2-1.5.3-1.9.2-.5.4-.8.7-1.1.3-.3.7-.6 1.1-.7.4-.2.9-.3 1.9-.3 1-.1 1.3-.1 4-.1zm0 3.5a4.7 4.7 0 1 0 0 9.4 4.7 4.7 0 0 0 0-9.4zm0 7.7a3 3 0 1 1 0-6 3 3 0 0 1 0 6zm5.9-7.9a1.1 1.1 0 1 1-2.2 0 1.1 1.1 0 0 1 2.2 0z"
+                  />
+               </svg>
+            </a>
+            <a
+               href="https://www.tiktok.com/@milfey.konduterka"
+               target="_blank"
+               aria-label="TikTok"
+               class="social-icon"
+            >
+               <svg viewBox="0 0 24 24" fill="currentColor">
+                  <path
+                     d="M16.6 2h-3.3v13.8c0 1.5-1.2 2.7-2.7 2.7s-2.7-1.2-2.7-2.7 1.2-2.7 2.7-2.7c.3 0 .6 0 .8.1V9.9c-.3 0-.5-.1-.8-.1-3.3 0-6 2.7-6 6s2.7 6 6 6 6-2.7 6-6V8.2c1.1.9 2.5 1.4 4 1.4V6.3c-2.3 0-4.1-1.9-4-4.3z"
+                  />
+               </svg>
+            </a>
+         </div>
+
          <p>© 2026 Milfey — Вафельні торти</p>
          <p>
             <a href="tel:+380505069090">📞 +38 (050) 506-90-90</a>
@@ -270,6 +476,41 @@
                   <button class="modal-close" onclick="toggleCart()">✕</button>
                </div>
                <div class="drawer-body" id="drawerBody"></div>
+
+               <!-- delivery -->
+               <div class="delivery-info">
+                  <div class="delivery-info-title">
+                     🚚 Доставка та самовивіз
+                  </div>
+                  <div class="delivery-item">
+                     <span class="delivery-icon">📦</span>
+                     <div>
+                        <div class="delivery-name">
+                           Нова Пошта — від 700 грн
+                        </div>
+                        <div class="delivery-sub">
+                           Пакування за наш рахунок, доставка за ваш
+                        </div>
+                     </div>
+                  </div>
+                  <div class="delivery-item">
+                     <span class="delivery-icon">🏙️</span>
+                     <div>
+                        <div class="delivery-name">По Києву — від 900 грн</div>
+                        <div class="delivery-sub">Доставка безкоштовна</div>
+                     </div>
+                  </div>
+                  <div class="delivery-item">
+                     <span class="delivery-icon">🏠</span>
+                     <div>
+                        <div class="delivery-name">Самовивіз</div>
+                        <div class="delivery-sub">
+                           вул. Вікентія Хвойки 18/14, корпус 9<br />Пн–Пт, з
+                           9:00 до 17:00
+                        </div>
+                     </div>
+                  </div>
+               </div>
                <div class="drawer-foot" id="drawerFoot" style="display: none">
                   <div class="total-row">
                      <span>Разом:</span><span id="totalPrice">0 грн</span>
@@ -418,6 +659,90 @@
          </div>
       </div>
 
+      <!-- PARTNER BANNER -->
+      <div class="partner-banner" id="partnerBanner">
+         <button class="partner-close" onclick="closePartnerBanner(event)">
+            ✕
+         </button>
+         <div class="partner-banner-text" onclick="openPartnerForm()">
+            Станьте нашим партнером і реалізовуйте продукцію Milfey в Україні
+            <span class="partner-arrow">»</span>
+         </div>
+      </div>
+
+      <!-- PARTNER MODAL -->
+      <div
+         class="modal-overlay"
+         id="partnerOverlay"
+         onclick="closeOnBg(event, 'partnerOverlay', closePartnerForm)"
+      >
+         <div class="modal">
+            <div class="modal-head">
+               <button class="modal-close" onclick="closePartnerForm()">
+                  ✕
+               </button>
+               <div class="modal-emoji">🤝</div>
+               <h2>Стати партнером</h2>
+               <p>Залиште заявку — ми зателефонуємо і обговоримо співпрацю</p>
+            </div>
+            <div class="modal-body">
+               <div class="form-group">
+                  <label class="form-label"
+                     >Ім'я та прізвище <span>*</span></label
+                  >
+                  <input
+                     class="form-input"
+                     id="pName"
+                     type="text"
+                     placeholder="Олена Іванова"
+                     maxlength="60"
+                  />
+               </div>
+               <div class="form-group">
+                  <label class="form-label">Телефон <span>*</span></label>
+                  <input
+                     class="form-input"
+                     id="pPhone"
+                     type="tel"
+                     inputmode="numeric"
+                     placeholder="+380XXXXXXXXX"
+                     maxlength="17"
+                  />
+               </div>
+               <div class="form-group">
+                  <label class="form-label">Зручний час для дзвінка</label>
+                  <div class="time-choice" id="timeChoice">
+                     <button
+                        type="button"
+                        class="time-btn"
+                        onclick="selectTime(this)"
+                     >
+                        Зараз
+                     </button>
+                     <button
+                        type="button"
+                        class="time-btn"
+                        onclick="selectTime(this)"
+                     >
+                        Перша половина дня
+                     </button>
+                     <button
+                        type="button"
+                        class="time-btn"
+                        onclick="selectTime(this)"
+                     >
+                        Друга половина дня
+                     </button>
+                  </div>
+               </div>
+            </div>
+            <div class="drawer-foot">
+               <button class="btn-teal btn-full" onclick="submitPartnerForm()">
+                  Відправити заявку →
+               </button>
+            </div>
+         </div>
+      </div>
       <script src="notify.js"></script>
       <script type="module" src="script.js"></script>
    </body>
