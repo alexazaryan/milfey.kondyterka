@@ -297,6 +297,30 @@ body {
    line-height: 1.6;
 }
 
+.hero-features {
+   display: flex;
+   flex-direction: column;
+   gap: 14px;
+   margin-top: 6px;
+}
+.hero-feature {
+   display: flex;
+   align-items: center;
+   gap: 12px;
+}
+.hero-feature-line {
+   width: 1px;
+   height: 16px;
+   background: var(--yellow);
+   flex-shrink: 0;
+}
+.hero-feature span:last-child {
+   font-size: 15px;
+   font-weight: 700;
+   color: white;
+   letter-spacing: 0.3px;
+}
+
 /* BUTTONS */
 .btn-teal {
    background: var(--teal);
@@ -1370,4 +1394,45 @@ body {
 /* card */
 .cart-count.has-items {
    background: var(--green);
+}
+
+/* HERO FEATURES */
+.hero-features {
+   display: flex;
+   flex-direction: column;
+   gap: 12px;
+   margin-top: 25px;
+   align-items: flex-start;
+}
+.hero-feature {
+   display: flex;
+   align-items: center;
+   gap: 10px;
+}
+.hero-feature i {
+   font-size: 18px;
+   color: var(--yellow);
+   flex-shrink: 0;
+}
+.hero-feature span {
+   font-size: 15px;
+   font-weight: 700;
+   color: white;
+}
+@media (max-width: 640px) {
+   .hero-text {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+   }
+   .hero-features {
+      align-items: flex-start;
+      gap: 10px;
+   }
+   .hero-feature i {
+      font-size: 16px;
+   }
+   .hero-feature span {
+      font-size: 13px;
+   }
 }
