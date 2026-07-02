@@ -1401,7 +1401,7 @@ body {
    display: flex;
    flex-direction: column;
    gap: 12px;
-   margin-top: 25px;
+   /* margin-top: 25px; */
    align-items: flex-start;
 }
 .hero-feature {
@@ -1434,5 +1434,20 @@ body {
    }
    .hero-feature span {
       font-size: 13px;
+   }
+}
+
+/*  */
+.hero-features-box {
+   background: rgba(0, 0, 0, 0.15);
+   border-radius: 12px;
+   padding: 14px 18px;
+   display: inline-block;
+   margin-top: 6px;
+}
+
+@media (max-width: 640px) {
+   .hero-features-box {
+      align-self: center;
    }
 }
