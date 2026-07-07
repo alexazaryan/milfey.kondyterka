@@ -316,3 +316,41 @@ button:hover {
       text-align: center;
    }
 }
+
+/* редактировать продукт  */
+.card-actions {
+   display: flex;
+   flex-direction: column;
+   gap: 8px;
+   flex-shrink: 0;
+}
+.edit-btn {
+   background: var(--teal-dark);
+   padding: 8px 18px;
+   font-size: 13px;
+}
+
+/* ограничение колличество такрточек  */
+/* CARD ACTIONS */
+.card-actions {
+   display: flex;
+   flex-direction: column;
+   gap: 8px;
+   flex-shrink: 0;
+}
+.edit-btn {
+   background: var(--teal-dark);
+   padding: 8px 18px;
+   font-size: 13px;
+}
+.edit-btn:hover {
+   background: #1e7378;
+   transform: none;
+}
+
+/* DISABLED BUTTON */
+button:disabled {
+   background: #ccc;
+   cursor: not-allowed;
+   transform: none;
+}

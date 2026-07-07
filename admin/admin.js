@@ -8,6 +8,7 @@ import {
    getFirestore,
    collection,
    addDoc,
+   updateDoc, //редактировать продукт
    getDocs,
    deleteDoc,
    doc,
@@ -29,6 +30,9 @@ const auth = getAuth(app);
 const db = getFirestore(app);
 
 const IMGBB_API_KEY = "b7636e548e191116b0f327bdc1e07423";
+const PRODUCT_LIMIT = 50;
+
+let editingId = null; //редактировать продукт
 
 /* ===================== ЛОГІН ===================== */
 window.login = async function () {
@@ -98,54 +102,90 @@ async function uploadPhoto(file) {
 }
 
 /* ===================== ДОДАТИ ТОВАР ===================== */
-window.addProduct = async function () {
+window.saveProduct = async function () {
    const name = document.getElementById("p-name").value.trim();
    const desc = document.getElementById("p-desc").value.trim();
    const price = document.getElementById("p-price").value.trim();
    const photoFile = document.getElementById("p-photo").files[0];
    const status = document.getElementById("form-status");
    const weight = document.getElementById("p-weight").value.trim();
-   // const shelf = document.getElementById("p-shelf").value.trim();
 
-   if (!name || !desc || !price || !photoFile) {
+   // фото обязательно только при добавлении нового товара
+   if (!name || !desc || !price || (!editingId && !photoFile)) {
       status.textContent = "⚠️ Заповніть всі поля!";
       status.className = "form-status error";
       return;
    }
 
-   status.textContent = "Стиснення та завантаження фото...";
+   // лимит на количество товаров
+   if (!editingId) {
+      const snapshotCount = (await getDocs(collection(db, "products"))).size;
+      if (snapshotCount >= PRODUCT_LIMIT) {
+         status.textContent =
+            "⚠️ Досягнуто ліміт 50 товарів. Зверніться до розробника для збільшення ліміту.";
+         status.className = "form-status error";
+         return;
+      }
+   }
+
+   status.textContent = editingId
+      ? "Оновлення..."
+      : "Стиснення та завантаження фото...";
    status.className = "form-status";
 
    try {
-      const photoUrl = await uploadPhoto(photoFile);
-      await addDoc(collection(db, "products"), {
+      const data = {
          name,
          desc,
          price: Number(price),
          weight,
-         // shelf,
-         photoUrl,
-         createdAt: Date.now(),
-      });
-      status.textContent = "✅ Товар додано!";
+      };
+
+      // фото грузим только если выбрали новое
+      if (photoFile) {
+         data.photoUrl = await uploadPhoto(photoFile);
+      }
+
+      if (editingId) {
+         await updateDoc(doc(db, "products", editingId), data);
+         status.textContent = "✅ Товар оновлено!";
+      } else {
+         data.createdAt = Date.now();
+         await addDoc(collection(db, "products"), data);
+         status.textContent = "✅ Товар додано!";
+      }
+
       status.className = "form-status success";
       setTimeout(() => {
          status.textContent = "";
          status.className = "form-status";
       }, 4000);
-      document.getElementById("p-name").value = "";
-      document.getElementById("p-desc").value = "";
-      document.getElementById("p-price").value = "";
-      document.getElementById("p-photo").value = "";
-      document.getElementById("p-weight").value = "";
-      document.getElementById("name-count").textContent = "0/35";
-      document.getElementById("desc-count").textContent = "0/300";
-      document.getElementById("photo-preview").style.display = "none";
+
+      resetForm();
       loadProducts();
    } catch (e) {
       status.textContent = "❌ Помилка: " + e.message;
       status.className = "form-status error";
    }
+};
+
+function resetForm() {
+   editingId = null;
+   document.getElementById("p-name").value = "";
+   document.getElementById("p-desc").value = "";
+   document.getElementById("p-price").value = "";
+   document.getElementById("p-photo").value = "";
+   document.getElementById("p-weight").value = "";
+   document.getElementById("name-count").textContent = "0/35";
+   document.getElementById("desc-count").textContent = "0/300";
+   document.getElementById("photo-preview").style.display = "none";
+   document.getElementById("save-btn").textContent = "Додати товар";
+   document.getElementById("form-title").textContent = "Додати товар";
+}
+
+window.cancelEdit = function () {
+   resetForm();
+   loadProducts();
 };
 
 /* ===================== СПИСОК ТОВАРІВ ===================== */
@@ -170,9 +210,27 @@ async function loadProducts() {
           <p>${p.desc}</p>
           <span class="product-price">${p.price} грн</span>
         </div>
-        <button class="delete-btn" onclick="deleteProduct('${docSnap.id}')">Видалити</button>
+        <div class="card-actions">
+          <button class="edit-btn" onclick='editProduct("${docSnap.id}", ${JSON.stringify(p.name)}, ${JSON.stringify(p.desc)}, ${p.price}, ${JSON.stringify(p.weight || "")}, ${JSON.stringify(p.photoUrl)})'>Редагувати</button>
+          <button class="delete-btn" onclick="deleteProduct('${docSnap.id}')">Видалити</button>
+        </div>
       </div>`;
    });
+
+   checkLimit(snapshot.size);
+}
+
+function checkLimit(count) {
+   const saveBtn = document.getElementById("save-btn");
+   const limitMsg = document.getElementById("limit-msg");
+
+   if (count >= PRODUCT_LIMIT && !editingId) {
+      saveBtn.disabled = true;
+      limitMsg.style.display = "block";
+   } else {
+      saveBtn.disabled = false;
+      limitMsg.style.display = "none";
+   }
 }
 
 /* ===================== ВИДАЛИТИ ==================== */
@@ -180,6 +238,22 @@ window.deleteProduct = async function (id) {
    if (!confirm("Видалити цей товар?")) return;
    await deleteDoc(doc(db, "products", id));
    loadProducts();
+};
+
+// ===================== РЕДАГУВАТИ продукт ===================== */
+window.editProduct = async function (id, name, desc, price, weight, photoUrl) {
+   editingId = id;
+   document.getElementById("p-name").value = name;
+   document.getElementById("p-desc").value = desc;
+   document.getElementById("p-price").value = price;
+   document.getElementById("p-weight").value = weight;
+   document.getElementById("name-count").textContent = name.length + "/35";
+   document.getElementById("desc-count").textContent = desc.length + "/300";
+   document.getElementById("photo-preview").src = photoUrl;
+   document.getElementById("photo-preview").style.display = "block";
+   document.getElementById("save-btn").textContent = "Зберегти зміни";
+   document.getElementById("form-title").textContent = "Редагування товару";
+   window.scrollTo({ top: 0, behavior: "smooth" });
 };
 
 /* ===================== ЛІЧИЛЬНИКИ ===================== */

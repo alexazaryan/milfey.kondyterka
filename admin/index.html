@@ -50,7 +50,7 @@
          <div class="admin-wrap">
             <!-- ФОРМА ДОДАВАННЯ -->
             <div class="admin-form">
-               <h3>Додати товар</h3>
+               <h3 id="form-title">Додати товар</h3>
 
                <div class="field-wrap">
                   <input
@@ -85,12 +85,6 @@
                   placeholder="Вага (наприклад: 500г)"
                   maxlength="20"
                />
-               <!-- <input
-                  type="text"
-                  id="p-shelf"
-                  placeholder="Термін придатності (наприклад: 14 днів)"
-                  maxlength="30"
-               /> -->
 
                <label class="file-label">
                   <span>📷 Обрати фото</span>
@@ -106,7 +100,26 @@
                   "
                />
 
-               <button onclick="addProduct()">Додати товар</button>
+               <button id="save-btn" onclick="saveProduct()">
+                  Додати товар
+               </button>
+               <button onclick="cancelEdit()" style="background: #aaa">
+                  Скасувати
+               </button>
+
+               <p
+                  id="limit-msg"
+                  style="
+                     display: none;
+                     color: var(--pink);
+                     font-weight: 700;
+                     text-align: center;
+                  "
+               >
+                  ⚠️ Досягнуто ліміт 50 товарів. Зверніться до розробника для
+                  збільшення ліміту.
+               </p>
+
                <p id="form-status" class="form-status"></p>
             </div>
 
