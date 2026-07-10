@@ -5,6 +5,8 @@ import {
    getDocs,
    query,
    orderBy,
+   doc,
+   getDoc,
 } from "https://www.gstatic.com/firebasejs/11.6.0/firebase-firestore.js";
 
 const firebaseConfig = {
@@ -20,16 +22,58 @@ const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
 
 /* ======================
+   CATEGORIES
+   ====================== */
+const CATEGORIES = [
+   {
+      id: "tort",
+      name: "Вафельні торти",
+      slogan: "Свято, доступне щодня",
+      emoji: "🎂",
+   },
+   {
+      id: "horishky",
+      name: "Горішки та трубочки",
+      slogan: "Улюблений смак з дитинства",
+      emoji: "🥜",
+   },
+   {
+      id: "pechyvo",
+      name: "Печиво та десерти",
+      slogan: "Вже захочеш ще",
+      emoji: "🍪",
+   },
+];
+
+/* ======================
    CART STATE
    ====================== */
 let cart = {};
 let products = [];
+
+/* catalog navigation state */
+let catalogState = { view: "categories", category: null, product: null };
+let galleryIndex = 0;
+let categoryCovers = {}; // кастомні обкладинки з адмінки
+
+/* ======================
+   LOAD CATEGORY COVERS
+   ====================== */
+async function loadCategoryCovers() {
+   try {
+      const snap = await getDoc(doc(db, "settings", "categoryCovers"));
+      if (snap.exists()) categoryCovers = snap.data();
+   } catch (e) {
+      console.error("Помилка завантаження обкладинок:", e);
+   }
+}
 
 /* ======================
    LOAD PRODUCTS FROM FIREBASE
    ====================== */
 async function loadProducts() {
    try {
+      await loadCategoryCovers();
       const q = query(collection(db, "products"), orderBy("createdAt", "desc"));
       const snapshot = await getDocs(q);
       products = snapshot.docs.map((doc) => ({ id: doc.id, ...doc.data() }));
@@ -41,43 +85,343 @@ async function loadProducts() {
 }
 
 /* ======================
-   RENDER PRODUCTS
+   HELPERS
+   ====================== */
+function getPhotos(p) {
+   if (Array.isArray(p.photos) && p.photos.length) return p.photos;
+   if (p.photoUrl) return [p.photoUrl];
+   return [];
+}
+
+function getMainPhoto(p) {
+   return getPhotos(p)[0] || "";
+}
+
+function categoryInfo(id) {
+   return CATEGORIES.find((c) => c.id === id);
+}
+
+/* ======================
+   MAIN RENDER SWITCH
    ====================== */
 function renderProducts() {
    const grid = document.getElementById("productGrid");
 
-   if (!products.length) {
-      grid.innerHTML = `
-      <div class="products-empty">
-        <div class="products-empty-icon">🧇</div>
-        <p class="products-empty-title">Незабаром тут з'являться смаколики!</p>
-        <p class="products-empty-sub">Ми вже готуємо асортимент — заходьте пізніше</p>
-      </div>`;
+   if (catalogState.view === "categories") renderCategoriesView(grid);
+   else if (catalogState.view === "list") {
+      renderListView(grid);
+      animateCards();
+   } else if (catalogState.view === "detail") renderDetailView(grid);
+}
+
+/* ======================
+   VIEW 1: CATEGORIES
+   ====================== */
+function renderCategoriesView(grid) {
+   grid.innerHTML = `<div class="category-grid">${CATEGORIES.map((c) => {
+      const photo = categoryCoverPhoto(c.id);
+      return `
+    <div class="category-card" onclick="selectCategory('${c.id}')">
+      <div class="category-card-anim">
+        <div class="category-cover" data-cat="${c.id}" ${photo ? `data-lazy-cover="${photo}"` : ""}>
+          <div class="category-cover-icon">${c.emoji}</div>
+          <div class="category-cover-overlay"></div>
+          <div class="category-cover-content">
+            <div class="category-cover-name">${c.name}</div>
+            <div class="category-cover-slogan">${c.slogan}</div>
+            <button class="btn-teal category-cover-btn" onclick="event.stopPropagation(); selectCategory('${c.id}')">Замовити</button>
+          </div>
+        </div>
+      </div>
+    </div>`;
+   }).join("")}</div>`;
+
+   lazyLoadCategoryCovers();
+}
+
+/* ліниве завантаження фото обкладинок — вантажимо, коли блок видно на ~15% */
+function lazyLoadCategoryCovers() {
+   const covers = document.querySelectorAll(".category-cover[data-lazy-cover]");
+   if (!covers.length) return;
+
+   if (!("IntersectionObserver" in window)) {
+      covers.forEach((el) => {
+         el.style.setProperty(
+            "--cover-photo",
+            `url('${el.dataset.lazyCover}')`,
+         );
+         el.classList.add("has-photo");
+      });
       return;
    }
 
-   grid.innerHTML = `<div class="products">${products
+   const io = new IntersectionObserver(
+      (entries) => {
+         entries.forEach((entry) => {
+            if (entry.isIntersecting) {
+               const el = entry.target;
+               el.style.setProperty(
+                  "--cover-photo",
+                  `url('${el.dataset.lazyCover}')`,
+               );
+               el.classList.add("has-photo");
+               io.unobserve(el);
+            }
+         });
+      },
+      { threshold: 0.15 },
+   );
+
+   covers.forEach((el) => io.observe(el));
+}
+
+/* обкладинка категорії: спочатку кастомне фото з адмінки, інакше — перше фото товару цієї категорії */
+function categoryCoverPhoto(catId) {
+   if (categoryCovers[catId]) return categoryCovers[catId];
+   const first = products.find((p) => p.category === catId);
+   return first ? getMainPhoto(first) : "";
+}
+
+window.selectCategory = function (catId) {
+   catalogState.view = "list";
+   catalogState.category = catId;
+   renderProducts();
+   document.getElementById("catalog").scrollIntoView({ behavior: "smooth" });
+};
+
+/* ======================
+   VIEW 2: PRODUCT LIST (по категорії)
+   ====================== */
+function renderListView(grid) {
+   const cat = categoryInfo(catalogState.category);
+   const list = products.filter((p) => p.category === catalogState.category);
+
+   const header = `
+    <div class="catalog-nav">
+      <button class="catalog-back" onclick="backToCategories()">←</button>
+      <div class="catalog-nav-title">${cat ? cat.emoji + " " + cat.name : "Товари"}</div>
+    </div>
+    <div class="catalog-breadcrumbs">Каталог › ${cat ? cat.name : ""}</div>`;
+
+   if (!list.length) {
+      grid.innerHTML = `${header}
+        <div class="products-empty">
+          <div class="products-empty-icon">🧇</div>
+          <p class="products-empty-title">У цій категорії поки немає товарів</p>
+        </div>`;
+      return;
+   }
+
+   grid.innerHTML = `${header}<div class="products">${list
       .map(
          (p, i) => `
-    <div class="card" style="transition-delay:${i * 100}ms">
+    <div class="card" style="transition-delay:${i * 100}ms" onclick="selectProduct('${p.id}')">
       <div class="card-img">
-        <img src="${p.photoUrl}" alt="${p.name}" loading="lazy" />
+        <img src="${getMainPhoto(p)}" alt="${p.name}" loading="lazy" />
+        ${p.badge ? `<div class="product-badge badge-${p.badge}">${p.badge === "new" ? "🆕 Новинка" : "🔥 Хіт продажів"}</div>` : ""}
       </div>
       <div class="card-body">
         <div class="card-name">${p.name}</div>
-        <div class="card-sub">${p.desc}</div>
-        <div class="card-meta">${p.weight ? p.weight + " кг" : ""}${p.shelf ? " · " + p.shelf : ""}</div>
+        <div class="card-meta">${p.weight ? p.weight + (p.unit ? " " + p.unit : "") : ""}</div>
         <div class="card-footer">
           <div class="price">${p.price} <small>грн</small></div>
-          <button class="add-btn" id="btn-${p.id}" onclick="addToCart('${p.id}')">В кошик</button>
+          <button class="add-btn ${cart[p.id] ? "added" : ""}" id="btn-${p.id}" onclick="event.stopPropagation(); addToCart('${p.id}')">${cart[p.id] ? "✓ Додано" : "В кошик"}</button>
         </div>
       </div>
     </div>`,
       )
       .join("")}</div>`;
-
-   animateCards();
 }
+
+window.backToCategories = function () {
+   catalogState.view = "categories";
+   catalogState.category = null;
+   renderProducts();
+};
+
+/* ======================
+   VIEW 3: PRODUCT DETAIL
+   ====================== */
+window.selectProduct = function (id) {
+   catalogState.view = "detail";
+   catalogState.product = id;
+   galleryIndex = 0;
+   renderProducts();
+   document.getElementById("catalog").scrollIntoView({ behavior: "smooth" });
+};
+
+window.backToList = function () {
+   catalogState.view = "list";
+   renderProducts();
+};
+
+function renderDetailView(grid) {
+   const p = products.find((x) => x.id === catalogState.product);
+   if (!p) {
+      grid.innerHTML = "";
+      catalogState.view = "categories";
+      renderProducts();
+      return;
+   }
+   const cat = categoryInfo(p.category);
+   const photos = getPhotos(p);
+   if (galleryIndex >= photos.length) galleryIndex = 0;
+
+   const thumbs = photos
+      .map(
+         (url, i) => `
+    <div class="gallery-thumb ${i === galleryIndex ? "active" : ""}" onclick="setGalleryIndex(${i})">
+      <img src="${url}" alt="${p.name}" />
+    </div>`,
+      )
+      .join("");
+
+   grid.innerHTML = `
+    <div class="catalog-nav">
+      <button class="catalog-back" onclick="backToList()">←</button>
+      <div class="catalog-nav-title">Назад до ${cat ? cat.name : "каталогу"}</div>
+    </div>
+    <div class="catalog-breadcrumbs">Каталог › ${cat ? cat.name : ""} › ${p.name}</div>
+    <div class="product-detail">
+      <div class="product-detail-gallery">
+        <div class="product-detail-main" onclick="openLightbox()">
+          <img src="${photos[galleryIndex] || ""}" alt="${p.name}" />
+          <div class="zoom-hint">🔍</div>
+          ${p.badge ? `<div class="product-badge badge-${p.badge}">${p.badge === "new" ? "🆕 Новинка" : "🔥 Хіт продажів"}</div>` : ""}
+        </div>
+        ${photos.length > 1 ? `<div class="gallery-thumbs">${thumbs}</div>` : ""}
+      </div>
+      <div class="product-detail-info">
+        <h2 class="product-detail-name">${p.name}</h2>
+        <p class="product-detail-desc">${p.desc}</p>
+        <div class="product-detail-weight">
+          ${p.weight ? "Вага: " + p.weight + (p.unit ? " " + p.unit : "") : ""}
+        </div>
+        <div class="product-detail-price">${p.price} <small>грн</small></div>
+        <button class="btn-teal btn-full ${cart[p.id] ? "added" : ""}" id="btn-${p.id}" onclick="addToCart('${p.id}')">${cart[p.id] ? "✓ Додано" : "🛒 В кошик"}</button>
+
+        <div class="detail-spacer"></div>
+
+        <div class="product-detail-delivery">
+          <div class="delivery-info-title">🚚 Доставка та самовивіз</div>
+          <div class="delivery-item">
+            <span class="delivery-icon">📦</span>
+            <div>
+              <div class="delivery-name">Нова Пошта — від 700 грн</div>
+              <div class="delivery-sub">Пакування за наш рахунок, доставка за ваш</div>
+            </div>
+          </div>
+          <div class="delivery-item">
+            <span class="delivery-icon">🏙️</span>
+            <div>
+              <div class="delivery-name">По Києву — від 900 грн</div>
+              <div class="delivery-sub">Доставка безкоштовна</div>
+            </div>
+          </div>
+          <div class="delivery-item">
+            <span class="delivery-icon">🏠</span>
+            <div>
+              <div class="delivery-name">Самовивіз</div>
+              <div class="delivery-sub">вул. Вікентія Хвойки 18/14, корпус 9<br>Пн–Пт, з 9:00 до 17:00</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>`;
+}
+
+window.setGalleryIndex = function (i) {
+   galleryIndex = i;
+   renderDetailView(document.getElementById("productGrid"));
+};
+
+/* ======================
+   LIGHTBOX (повноекранний перегляд фото)
+   ====================== */
+let lightboxIndex = 0;
+
+function ensureLightboxDOM() {
+   if (document.getElementById("lightboxOverlay")) return;
+
+   const overlay = document.createElement("div");
+   overlay.id = "lightboxOverlay";
+   overlay.className = "lightbox-overlay";
+   overlay.innerHTML = `
+    <button class="lightbox-close" onclick="closeLightbox()">✕</button>
+    <button class="lightbox-arrow lightbox-prev" onclick="lightboxPrev(event)">‹</button>
+    <img class="lightbox-img" id="lightboxImg" src="" alt="" />
+    <button class="lightbox-arrow lightbox-next" onclick="lightboxNext(event)">›</button>
+   `;
+   overlay.addEventListener("click", (e) => {
+      if (e.target === overlay) closeLightbox();
+   });
+   document.body.appendChild(overlay);
+
+   /* свайп на мобілці всередині лайтбоксу */
+   let startX = 0;
+   overlay.addEventListener(
+      "touchstart",
+      (e) => {
+         startX = e.touches[0].clientX;
+      },
+      { passive: true },
+   );
+   overlay.addEventListener(
+      "touchend",
+      (e) => {
+         const endX = e.changedTouches[0].clientX;
+         const delta = endX - startX;
+         if (delta > 60) lightboxPrev();
+         else if (delta < -60) lightboxNext();
+      },
+      { passive: true },
+   );
+}
+
+window.openLightbox = function () {
+   const p = products.find((x) => x.id === catalogState.product);
+   if (!p) return;
+   const photos = getPhotos(p);
+   if (!photos.length) return;
+
+   ensureLightboxDOM();
+   lightboxIndex = galleryIndex;
+   document.getElementById("lightboxImg").src = photos[lightboxIndex];
+   document.getElementById("lightboxOverlay").classList.add("open");
+   document.body.style.overflow = "hidden";
+};
+
+window.closeLightbox = function () {
+   const overlay = document.getElementById("lightboxOverlay");
+   if (overlay) overlay.classList.remove("open");
+   document.body.style.overflow = "";
+};
+
+window.lightboxNext = function (e) {
+   if (e) e.stopPropagation();
+   const p = products.find((x) => x.id === catalogState.product);
+   if (!p) return;
+   const photos = getPhotos(p);
+   lightboxIndex = (lightboxIndex + 1) % photos.length;
+   document.getElementById("lightboxImg").src = photos[lightboxIndex];
+};
+
+window.lightboxPrev = function (e) {
+   if (e) e.stopPropagation();
+   const p = products.find((x) => x.id === catalogState.product);
+   if (!p) return;
+   const photos = getPhotos(p);
+   lightboxIndex = (lightboxIndex - 1 + photos.length) % photos.length;
+   document.getElementById("lightboxImg").src = photos[lightboxIndex];
+};
+
+document.addEventListener("keydown", (e) => {
+   const overlay = document.getElementById("lightboxOverlay");
+   if (!overlay || !overlay.classList.contains("open")) return;
+   if (e.key === "Escape") closeLightbox();
+   if (e.key === "ArrowRight") lightboxNext();
+   if (e.key === "ArrowLeft") lightboxPrev();
+});
 
 /* ======================
    CARD ANIMATION
@@ -130,7 +474,6 @@ window.changeQty = function (id, delta) {
    updateCartUI();
 };
 
-// card
 function updateCartUI() {
    const total = Object.values(cart).reduce((a, b) => a + b, 0);
    const desktopCount = document.getElementById("cartCountDesktop");
@@ -168,7 +511,7 @@ function renderCartItems() {
       sum += p.price * qty;
       html += `
       <div class="cart-item">
-        <div class="cart-item-icon"><img src="${p.photoUrl}" alt="${p.name}" style="width:100%;height:100%;object-fit:cover;border-radius:10px;" /></div>
+        <div class="cart-item-icon"><img src="${getMainPhoto(p)}" alt="${p.name}" style="width:100%;height:100%;object-fit:cover;border-radius:10px;" /></div>
         <div class="cart-item-info">
           <div class="cart-item-name">${p.name}</div>
           <div class="cart-item-price">${p.price} грн × ${qty} = ${p.price * qty} грн</div>
@@ -196,7 +539,6 @@ window.toggleCart = function () {
    document.body.style.overflow = isOpen ? "" : "hidden";
    if (!isOpen) showScreen("screenCart", "left");
 
-   // Скрываем/показываем кнопку звонка
    const callBtn = document.getElementById("callBtn");
    if (callBtn) callBtn.style.display = isOpen ? "" : "none";
 };
@@ -341,11 +683,54 @@ function initPhone() {
 }
 
 /* ======================
+   SWIPE BACK (mobile)
+   ====================== */
+function initSwipeBack() {
+   const grid = document.getElementById("productGrid");
+   if (!grid) return;
+
+   let startX = 0;
+   let startY = 0;
+   let tracking = false;
+
+   grid.addEventListener(
+      "touchstart",
+      (e) => {
+         if (catalogState.view === "categories") return;
+         startX = e.touches[0].clientX;
+         startY = e.touches[0].clientY;
+         tracking = true;
+      },
+      { passive: true },
+   );
+
+   grid.addEventListener(
+      "touchend",
+      (e) => {
+         if (!tracking) return;
+         tracking = false;
+         const endX = e.changedTouches[0].clientX;
+         const endY = e.changedTouches[0].clientY;
+         const deltaX = endX - startX;
+         const deltaY = endY - startY;
+
+         // свайп вправо (палець зліва направо), переважно горизонтальний рух
+         if (deltaX > 70 && Math.abs(deltaX) > Math.abs(deltaY) * 1.5) {
+            if (catalogState.view === "detail") backToList();
+            else if (catalogState.view === "list") backToCategories();
+         }
+      },
+      { passive: true },
+   );
+}
+
+/* ======================
    INIT
    ====================== */
 initPhone();
 renderCartItems();
 loadProducts();
+initSwipeBack();
 
 /* ======================
    HERO PARALLAX 3D

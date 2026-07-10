@@ -48,6 +48,105 @@
          </div>
 
          <div class="admin-wrap">
+            <!-- ОБКЛАДИНКИ КАТЕГОРІЙ -->
+            <div class="admin-form">
+               <div class="accordion-header" onclick="toggleCoverAccordion()">
+                  <h3 style="margin: 0">Обкладинки категорій</h3>
+                  <span class="accordion-arrow" id="cover-accordion-arrow"
+                     >▾</span
+                  >
+               </div>
+               <div class="accordion-body" id="cover-accordion-body">
+                  <p style="font-size: 13px; color: #7a9a9c; font-weight: 600">
+                     Якщо не вибрати фото — використовується автоматичне (з
+                     першого товару категорії) або колір за замовчуванням.
+                  </p>
+
+                  <div class="cover-item">
+                     <div class="cover-item-label">🎂 Вафельні торти</div>
+                     <img
+                        id="cover-preview-tort"
+                        class="photo-preview"
+                        style="display: none"
+                     />
+                     <label class="file-label">
+                        <span>📷 Обрати фото</span>
+                        <input
+                           type="file"
+                           id="cover-photo-tort"
+                           accept="image/*"
+                        />
+                     </label>
+                     <button
+                        type="button"
+                        class="cover-remove-btn"
+                        id="cover-remove-tort"
+                        style="display: none"
+                        onclick="removeCoverPhoto('tort')"
+                     >
+                        ✕ Видалити
+                     </button>
+                  </div>
+
+                  <div class="cover-item">
+                     <div class="cover-item-label">🥜 Горішки та трубочки</div>
+                     <img
+                        id="cover-preview-horishky"
+                        class="photo-preview"
+                        style="display: none"
+                     />
+                     <label class="file-label">
+                        <span>📷 Обрати фото</span>
+                        <input
+                           type="file"
+                           id="cover-photo-horishky"
+                           accept="image/*"
+                        />
+                     </label>
+                     <button
+                        type="button"
+                        class="cover-remove-btn"
+                        id="cover-remove-horishky"
+                        style="display: none"
+                        onclick="removeCoverPhoto('horishky')"
+                     >
+                        ✕ Видалити
+                     </button>
+                  </div>
+
+                  <div class="cover-item">
+                     <div class="cover-item-label">🍪 Печиво та десерти</div>
+                     <img
+                        id="cover-preview-pechyvo"
+                        class="photo-preview"
+                        style="display: none"
+                     />
+                     <label class="file-label">
+                        <span>📷 Обрати фото</span>
+                        <input
+                           type="file"
+                           id="cover-photo-pechyvo"
+                           accept="image/*"
+                        />
+                     </label>
+                     <button
+                        type="button"
+                        class="cover-remove-btn"
+                        id="cover-remove-pechyvo"
+                        style="display: none"
+                        onclick="removeCoverPhoto('pechyvo')"
+                     >
+                        ✕ Видалити
+                     </button>
+                  </div>
+
+                  <button id="save-covers-btn" onclick="saveCoverPhotos()">
+                     Зберегти обкладинки
+                  </button>
+                  <p id="cover-status" class="form-status"></p>
+               </div>
+            </div>
+
             <!-- ФОРМА ДОДАВАННЯ -->
             <div class="admin-form">
                <h3 id="form-title">Додати товар</h3>
@@ -66,9 +165,9 @@
                   <textarea
                      id="p-desc"
                      placeholder="Опис товару"
-                     maxlength="300"
+                     maxlength="500"
                   ></textarea>
-                  <small id="desc-count">0/300</small>
+                  <small id="desc-count">0/500</small>
                </div>
 
                <input
@@ -78,27 +177,73 @@
                   min="0"
                />
 
-               <!-- вес -->
-               <input
-                  type="text"
-                  id="p-weight"
-                  placeholder="Вага (наприклад: 500г)"
-                  maxlength="20"
-               />
+               <!-- вес + одиниця -->
+               <div class="field-row">
+                  <input
+                     type="text"
+                     id="p-weight"
+                     placeholder="Вага/кількість (наприклад: 500)"
+                     maxlength="20"
+                  />
+                  <select id="p-unit">
+                     <option value="кг">кг</option>
+                     <option value="г">г</option>
+                     <option value="шт">шт</option>
+                  </select>
+               </div>
 
-               <label class="file-label">
-                  <span>📷 Обрати фото</span>
-                  <input type="file" id="p-photo" accept="image/*" />
-               </label>
-               <img
-                  id="photo-preview"
-                  style="
-                     display: none;
-                     max-width: 160px;
-                     border-radius: 12px;
-                     margin-top: 8px;
-                  "
-               />
+               <!-- категорія -->
+               <div class="field-wrap">
+                  <label class="select-label">Категорія</label>
+                  <select id="p-category">
+                     <option value="tort">🎂 Вафельні торти</option>
+                     <option value="horishky">🥜 Горішки та трубочки</option>
+                     <option value="pechyvo">🍪 Печиво та десерти</option>
+                  </select>
+               </div>
+
+               <!-- бейдж (необов'язково) -->
+               <div class="field-wrap">
+                  <label class="select-label">Позначка (необов'язково)</label>
+                  <select id="p-badge">
+                     <option value="">Немає</option>
+                     <option value="new">🆕 Новинка</option>
+                     <option value="hit">🔥 Хіт продажів</option>
+                  </select>
+               </div>
+
+               <!-- фото 1-3 -->
+               <div class="photo-slots">
+                  <label class="file-label">
+                     <span>📷 Фото 1 (головне)</span>
+                     <input type="file" id="p-photo-0" accept="image/*" />
+                  </label>
+                  <img
+                     id="photo-preview-0"
+                     class="photo-preview"
+                     style="display: none"
+                  />
+
+                  <label class="file-label">
+                     <span>📷 Фото 2 (необов'язково)</span>
+                     <input type="file" id="p-photo-1" accept="image/*" />
+                  </label>
+                  <img
+                     id="photo-preview-1"
+                     class="photo-preview"
+                     style="display: none"
+                  />
+
+                  <label class="file-label">
+                     <span>📷 Фото 3 (необов'язково)</span>
+                     <input type="file" id="p-photo-2" accept="image/*" />
+                  </label>
+                  <img
+                     id="photo-preview-2"
+                     class="photo-preview"
+                     style="display: none"
+                  />
+               </div>
 
                <button id="save-btn" onclick="saveProduct()">
                   Додати товар
