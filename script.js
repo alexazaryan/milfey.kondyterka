@@ -56,6 +56,95 @@ let catalogState = { view: "categories", category: null, product: null };
 let galleryIndex = 0;
 let categoryCovers = {}; // кастомні обкладинки з адмінки
 
+/* чи вже виконали початкову маршрутизацію за URL (щоб не робити це двічі) */
+let initialRouteApplied = false;
+
+/* ======================
+   ROUTING (реальні URL для категорій і товарів)
+   ====================== */
+
+/* перетворює поточний catalogState у шлях URL */
+function stateToPath(state) {
+   if (state.view === "list" && state.category) {
+      return `/catalog/${state.category}`;
+   }
+   if (state.view === "detail" && state.category && state.product) {
+      return `/product/${state.category}/${state.product}`;
+   }
+   return "/";
+}
+
+/* записує URL в адресний рядок без перезавантаження сторінки */
+function pushRoute(state) {
+   const path = stateToPath(state);
+   if (window.location.pathname !== path) {
+      window.history.pushState(null, "", path);
+   }
+   updateMetaForState(state);
+}
+
+/* оновлює <title> під поточний екран (проста SEO-допомога) */
+function updateMetaForState(state) {
+   if (state.view === "detail" && state.product) {
+      const p = products.find((x) => x.id === state.product);
+      if (p) {
+         document.title = `${p.name} — Milfey`;
+         return;
+      }
+   }
+   if (state.view === "list" && state.category) {
+      const cat = categoryInfo(state.category);
+      if (cat) {
+         document.title = `${cat.name} — Milfey`;
+         return;
+      }
+   }
+   document.title = "Milfey — Вафельні торти";
+}
+
+/* читає поточний URL і виставляє catalogState (виклик при першому завантаженні та на popstate) */
+function applyRouteFromLocation(scroll) {
+   const parts = window.location.pathname.split("/").filter(Boolean);
+
+   if (parts[0] === "product" && parts[1] && parts[2]) {
+      const cat = categoryInfo(parts[1]);
+      const exists = products.some((p) => p.id === parts[2]);
+      if (cat && exists) {
+         catalogState = {
+            view: "detail",
+            category: parts[1],
+            product: parts[2],
+         };
+         galleryIndex = 0;
+         renderProducts();
+         updateMetaForState(catalogState);
+         if (scroll) document.getElementById("catalog").scrollIntoView();
+         return;
+      }
+   }
+
+   if (parts[0] === "catalog" && parts[1]) {
+      const cat = categoryInfo(parts[1]);
+      if (cat) {
+         catalogState = { view: "list", category: parts[1], product: null };
+         renderProducts();
+         updateMetaForState(catalogState);
+         if (scroll) document.getElementById("catalog").scrollIntoView();
+         return;
+      }
+   }
+
+   // невідомий або кореневий шлях — показуємо категорії
+   catalogState = { view: "categories", category: null, product: null };
+   renderProducts();
+   updateMetaForState(catalogState);
+}
+
+/* назад/вперед у браузері */
+window.addEventListener("popstate", () => {
+   applyRouteFromLocation(false);
+});
+
 /* ======================
    LOAD CATEGORY COVERS
    ====================== */
@@ -77,10 +166,21 @@ async function loadProducts() {
       const q = query(collection(db, "products"), orderBy("createdAt", "desc"));
       const snapshot = await getDocs(q);
       products = snapshot.docs.map((doc) => ({ id: doc.id, ...doc.data() }));
-      renderProducts();
+
+      if (!initialRouteApplied) {
+         initialRouteApplied = true;
+         applyRouteFromLocation(false);
+      } else {
+         renderProducts();
+      }
    } catch (e) {
       console.error("Помилка завантаження товарів:", e);
-      renderProducts();
+      if (!initialRouteApplied) {
+         initialRouteApplied = true;
+         applyRouteFromLocation(false);
+      } else {
+         renderProducts();
+      }
    }
 }
 
@@ -183,8 +283,8 @@ function categoryCoverPhoto(catId) {
 }
 
 window.selectCategory = function (catId) {
-   catalogState.view = "list";
-   catalogState.category = catId;
+   catalogState = { view: "list", category: catId, product: null };
+   pushRoute(catalogState);
    renderProducts();
    document.getElementById("catalog").scrollIntoView({ behavior: "smooth" });
 };
@@ -192,6 +292,11 @@ window.selectCategory = function (catId) {
 /* ======================
    VIEW 2: PRODUCT LIST (по категорії)
    ====================== */
+
+function truncate(text, max) {
+   if (!text) return "";
+   return text.length > max ? text.slice(0, max).trim() + "…" : text;
+}
 function renderListView(grid) {
    const cat = categoryInfo(catalogState.category);
    const list = products.filter((p) => p.category === catalogState.category);
@@ -220,12 +325,12 @@ function renderListView(grid) {
         <img src="${getMainPhoto(p)}" alt="${p.name}" loading="lazy" />
         ${p.badge ? `<div class="product-badge badge-${p.badge}">${p.badge === "new" ? "🆕 Новинка" : "🔥 Хіт продажів"}</div>` : ""}
       </div>
-      <div class="card-body">
+    <div class="card-body">
         <div class="card-name">${p.name}</div>
-        <div class="card-meta">${p.weight ? p.weight + (p.unit ? " " + p.unit : "") : ""}</div>
+        <div class="card-desc">${truncate(p.desc, 60)}</div>
         <div class="card-footer">
           <div class="price">${p.price} <small>грн</small></div>
-          <button class="add-btn ${cart[p.id] ? "added" : ""}" id="btn-${p.id}" onclick="event.stopPropagation(); addToCart('${p.id}')">${cart[p.id] ? "✓ Додано" : "В кошик"}</button>
+          <span class="card-details-link">Детальніше →</span>
         </div>
       </div>
     </div>`,
@@ -234,32 +339,45 @@ function renderListView(grid) {
 }
 
 window.backToCategories = function () {
-   catalogState.view = "categories";
-   catalogState.category = null;
+   catalogState = { view: "categories", category: null, product: null };
+   pushRoute(catalogState);
    renderProducts();
+   document.getElementById("catalog").scrollIntoView({ behavior: "smooth" });
 };
 
 /* ======================
    VIEW 3: PRODUCT DETAIL
    ====================== */
 window.selectProduct = function (id) {
-   catalogState.view = "detail";
-   catalogState.product = id;
+   const p = products.find((x) => x.id === id);
+   catalogState = {
+      view: "detail",
+      category: p ? p.category : catalogState.category,
+      product: id,
+   };
+   pushRoute(catalogState);
    galleryIndex = 0;
    renderProducts();
    document.getElementById("catalog").scrollIntoView({ behavior: "smooth" });
 };
 
 window.backToList = function () {
-   catalogState.view = "list";
+   catalogState = {
+      view: "list",
+      category: catalogState.category,
+      product: null,
+   };
+   pushRoute(catalogState);
    renderProducts();
+   document.getElementById("catalog").scrollIntoView({ behavior: "smooth" });
 };
 
 function renderDetailView(grid) {
    const p = products.find((x) => x.id === catalogState.product);
    if (!p) {
       grid.innerHTML = "";
-      catalogState.view = "categories";
+      catalogState = { view: "categories", category: null, product: null };
+      pushRoute(catalogState);
       renderProducts();
       return;
    }
@@ -298,7 +416,7 @@ function renderDetailView(grid) {
           ${p.weight ? "Вага: " + p.weight + (p.unit ? " " + p.unit : "") : ""}
         </div>
         <div class="product-detail-price">${p.price} <small>грн</small></div>
-        <button class="btn-teal btn-full ${cart[p.id] ? "added" : ""}" id="btn-${p.id}" onclick="addToCart('${p.id}')">${cart[p.id] ? "✓ Додано" : "🛒 В кошик"}</button>
+       <button class="btn-teal btn-full ${cart[p.id] ? "added" : ""}" id="btn-${p.id}" onclick="addToCart('${p.id}')">${cart[p.id] ? "✓ Додано" : '<i class="ti ti-shopping-cart"></i> В кошик'}</button>
 
         <div class="detail-spacer"></div>
 
@@ -845,3 +963,4 @@ window.submitPartnerForm = async function () {
       btn.disabled = false;
    }, 2000);
 };
+// мой

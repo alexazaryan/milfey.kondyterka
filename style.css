@@ -1253,7 +1253,7 @@ body {
 }
 @media (max-width: 640px) {
    #catalog {
-      scroll-margin-top: 260px;
+      scroll-margin-top: 60px;
    }
 }
 
@@ -1296,7 +1296,8 @@ body {
    margin: 0 auto;
    background: linear-gradient(120deg, #ffe600, #ff8a00);
    border-radius: 24px;
-   padding: 26px 60px 26px 32px;
+   /* padding: 26px 60px 26px 32px; */
+   padding: 40px 60px 40px 32px;
    box-shadow: 0 10px 28px rgba(255, 138, 0, 0.35);
    z-index: 998;
    opacity: 0;
@@ -1322,7 +1323,7 @@ body {
 .partner-banner-text {
    flex: 1;
    font-family: "Pacifico", cursive;
-   font-size: 33px;
+   font-size: 35px;
    line-height: 1.5;
    color: #3a2200;
    cursor: pointer;
@@ -1359,10 +1360,11 @@ body {
       right: 16px;
       bottom: 90px;
       max-width: none;
-      padding: 20px 50px 20px 22px;
+      padding: 34px 50px 34px 22px;
+      /* padding: 20px 50px 20px 22px; */
    }
    .partner-banner-text {
-      font-size: 20px;
+      font-size: 22px;
    }
    .partner-arrow {
       font-size: 22px;
@@ -1691,8 +1693,8 @@ body {
    inset: 0;
    background: linear-gradient(
       180deg,
-      rgba(0, 0, 0, 0) 40%,
-      rgba(15, 36, 38, 0.7) 100%
+      rgba(15, 36, 38, 0.1) 0%,
+      rgba(15, 36, 38, 0.5) 100%
    );
 }
 .category-cover-content {
@@ -1704,7 +1706,7 @@ body {
 }
 .category-cover-name {
    font-family: "Pacifico", cursive;
-   font-size: 22px;
+   font-size: 30px;
    color: white;
    margin-bottom: 6px;
    text-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
@@ -1739,7 +1741,7 @@ body {
       min-height: 230px;
    }
    .category-cover-name {
-      font-size: 20px;
+      font-size: 25px;
    }
    .category-cover-icon {
       font-size: 46px;
@@ -2041,4 +2043,70 @@ select:focus {
    font-size: 12px;
    font-weight: 700;
    color: var(--teal-dark);
+}
+/* блоки продукта на пеерходах */
+#productGrid {
+   scroll-margin-top: 90px;
+}
+@media (max-width: 640px) {
+   #productGrid {
+      scroll-margin-top: 70px;
+   }
+}
+
+/* категории товара  */
+.card-desc {
+   font-size: 12px;
+   color: #7a9a9c;
+   font-weight: 600;
+   margin-bottom: 10px;
+   line-height: 1.4;
+}
+.card-details-link {
+   font-size: 13px;
+   font-weight: 800;
+   color: var(--teal-dark);
+}
+.card-name {
+   font-weight: 900;
+   font-size: 17px;
+   color: #0f2426;
+   margin-bottom: 5px;
+   display: -webkit-box;
+   -webkit-line-clamp: 2;
+   -webkit-box-orient: vertical;
+   overflow: hidden;
+   min-height: 44px;
+}
+.card-desc {
+   font-size: 12px;
+   color: #7a9a9c;
+   font-weight: 600;
+   margin-bottom: 10px;
+   line-height: 1.4;
+   display: -webkit-box;
+   -webkit-line-clamp: 2;
+   -webkit-box-orient: vertical;
+   overflow: hidden;
+   min-height: 34px;
+}
+
+/* кнопка детали  */
+.card-details-link {
+   font-size: 13px;
+   font-weight: 800;
+   color: var(--teal-dark);
+   border: 2px solid var(--teal);
+   border-radius: var(--radius-btn);
+   padding: 9px 20px;
+   transition:
+      background 0.15s,
+      color 0.15s;
+}
+@media (hover: hover) {
+   .card-details-link:hover {
+      background: var(--teal);
+      color: white;
+      cursor: pointer;
+   }
 }

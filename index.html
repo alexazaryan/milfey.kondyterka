@@ -31,7 +31,7 @@
       />
 
       <!-- Favicon -->
-      <link rel="icon" type="image/png" href="images/logo.png" />
+      <link rel="icon" type="image/png" href="/images/logo.png" />
 
       <!-- Open Graph -->
       <meta property="og:title" content="Milfey — Вафельні торти" />
@@ -57,7 +57,7 @@
          rel="stylesheet"
          href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/tabler-icons.min.css"
       />
-      <link rel="stylesheet" href="style.css" />
+      <link rel="stylesheet" href="/style.css" />
    </head>
    <body>
       <!-- CALL BUTTON -->
@@ -70,14 +70,14 @@
       <nav class="nav">
          <div class="nav-container">
             <!-- <a href="#" class="nav-logo">Milfey</a> -->
-            <a href="#" class="nav-logo"
+            <a href="/" class="nav-logo"
                ><img
-                  src="images/milfey_text_with_leaf_trimmed.png"
+                  src="/images/milfey_text_with_leaf_trimmed.png"
                   alt="Milfey"
                   class="nav-logo-img"
             /></a>
             <ul class="nav-links">
-               <li><a href="#catalog">Каталог</a></li>
+               <li><a href="/#catalog">Каталог</a></li>
                <li>
                   <a
                      href="#"
@@ -98,8 +98,8 @@
                      >Співпраця</a
                   >
                </li>
-               <li><a href="#faq">FAQ</a></li>
-               <li><a href="#contact">Контакти</a></li>
+               <li><a href="/#faq">FAQ</a></li>
+               <li><a href="/#contact">Контакти</a></li>
             </ul>
             <button class="nav-cart" onclick="toggleCart()">
                🛒 Кошик<span class="cart-count" id="cartCountDesktop">0</span>
@@ -126,7 +126,7 @@
       </nav>
 
       <div class="mobile-menu" id="mobileMenu">
-         <a href="#catalog" onclick="toggleMenu()">Каталог</a>
+         <a href="/#catalog" onclick="toggleMenu()">Каталог</a>
          <a
             href="#"
             onclick="
@@ -143,8 +143,8 @@
             "
             >Співпраця</a
          >
-         <a href="#faq" onclick="toggleMenu()">FAQ</a>
-         <a href="#contact" onclick="toggleMenu()">Контакти</a>
+         <a href="/#faq" onclick="toggleMenu()">FAQ</a>
+         <a href="/#contact" onclick="toggleMenu()">Контакти</a>
       </div>
 
       <!-- hero -->
@@ -170,7 +170,7 @@
                </div>
             </div>
             <div class="hero-img">
-               <img src="images/foto2.png" alt="Milfey торт" />
+               <img src="/images/foto2.png" alt="Milfey торт" />
             </div>
          </div>
       </section>
@@ -359,7 +359,7 @@
       <footer class="footer" id="contact">
          <div class="footer-logo">
             <img
-               src="images/milfey_text_with_leaf_trimmed.png"
+               src="/images/milfey_text_with_leaf_trimmed.png"
                alt="Milfey"
                class="footer-logo-img"
             />
@@ -687,7 +687,7 @@
             ✕
          </button>
          <div class="partner-banner-text" onclick="openPartnerForm()">
-            Станьте нашим партнером і реалізовуйте продукцію Milfey
+            Станьте нашим партнером
          </div>
          <div class="partner-arrow" onclick="openPartnerForm()">→</div>
       </div>
@@ -765,7 +765,7 @@
             </div>
          </div>
       </div>
-      <script src="notify.js"></script>
-      <script type="module" src="script.js"></script>
+      <script src="/notify.js"></script>
+      <script type="module" src="/script.js"></script>
    </body>
 </html>
