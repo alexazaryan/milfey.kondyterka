@@ -304,7 +304,7 @@ function renderListView(grid) {
    const header = `
     <div class="catalog-nav">
       <button class="catalog-back" onclick="backToCategories()">←</button>
-      <div class="catalog-nav-title">${cat ? cat.emoji + " " + cat.name : "Товари"}</div>
+      <div class="catalog-nav-title">${cat ? cat.name : "Товари"}</div>
     </div>
     <div class="catalog-breadcrumbs">Каталог › ${cat ? cat.name : ""}</div>`;
 
