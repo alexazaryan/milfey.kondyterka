@@ -425,14 +425,14 @@ function renderDetailView(grid) {
           <div class="delivery-item">
             <span class="delivery-icon">📦</span>
             <div>
-              <div class="delivery-name">Нова Пошта — від 700 грн</div>
+              <div class="delivery-name">Нова Пошта — від 900 грн</div>
               <div class="delivery-sub">Пакування за наш рахунок, доставка за ваш</div>
             </div>
           </div>
           <div class="delivery-item">
             <span class="delivery-icon">🏙️</span>
             <div>
-              <div class="delivery-name">По Києву — від 900 грн</div>
+              <div class="delivery-name">По Києву — від 1000 грн</div>
               <div class="delivery-sub">Доставка безкоштовна</div>
             </div>
           </div>
